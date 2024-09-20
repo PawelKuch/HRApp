@@ -62,7 +62,7 @@
                         @if($day -> eq($workTime -> date))
                             {{$workTime -> hoursAmount}}
                         @endif
-                    @endforeach 
+                    @endforeach
                 </td>
             </tr>
             @endforeach

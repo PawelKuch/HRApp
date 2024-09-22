@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="{{asset('css/menu.css')}}">
 </head>
 <body>
 @include('includes.menu-navigation')
@@ -20,7 +20,7 @@
         </div>
         <form action="{{route('update-user' , ['userId' => $user -> userId])}}" method="POST">
             @csrf
-            <div class="input-group">
+            <div class="input-group d-flex flex-column">
                 <div style="display: flex; flex-direction: row; justify-content: center;">
                     <span class="input-span input-group-text mb-3"> email </span>
                     <input class="form-control mb-3" id="email" name="email" value="{{$user -> getAttribute('email')}}">

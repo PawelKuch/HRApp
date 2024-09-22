@@ -2,8 +2,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 15px 15px;
     border-bottom: 1px solid #cccccc;
+
 }
 
 #imgLogo {
@@ -37,7 +38,8 @@
 }
 
 #navi-style ul {
-    background-color: beige;
+    border-bottom: 1px solid #9ca3af;
+    padding: 0 10px 10px 10px;
 }
 #header{
     display: flex;

@@ -124,7 +124,23 @@ class mainTestController extends Controller
         return redirect() -> route('edit-user', $userId);
     }
 
-    public function signOut(Request $request):\Illuminate\Http\RedirectResponse
+    public  function  blockUser($userId) : RedirectResponse
+    {
+        $user = User::findByUserId($userId);
+        $user -> is_blocked = true;
+        $user -> save();
+        return redirect() -> route('users');
+    }
+
+    public function unblockUser($userId) : RedirectResponse
+    {
+        $user = User::findByUserId($userId);
+        $user -> is_blocked = false;
+        $user -> save();
+        return redirect() -> route('users');
+    }
+
+    public function signOut(Request $request): RedirectResponse
     {
         Auth::logout();
         $request -> session() -> invalidate();
@@ -132,12 +148,21 @@ class mainTestController extends Controller
         return redirect() -> route('main-page');
     }
 
-    public function getWorkTimePage($userId) : View
+    public function getWorkTimePage($userId, Request $request) : View
     {
+        $month = $request -> query('month', Carbon::now()->month);
+        $year = $request -> query('year', Carbon::now()->year);
 
-        $month = Carbon::now()->month;
-        $year = Carbon::now()->year;
+        $action = $request -> input('action', null);
+
+        if($action === 'prev' && $month == 1) {
+            $year = $year - 1;
+        }else if($action === 'next' && $month == 12){
+            $year = $year + 1;
+        }
+
         $currentMonth = Carbon::create($year, $month, 1);
+
         $daysInMonth = $currentMonth -> daysInMonth;
         $days = [];
         for($day = 1; $day <= $daysInMonth; $day++){
@@ -160,23 +185,14 @@ class mainTestController extends Controller
             $workTimes = WorkTime::where('user_id', $user -> id) -> get();
             if($workTimes == null){
                 Log::info("WorkTime not found");
-                /*$hoursAmount = '';
-                $jsonData = '';
-                $date = '';*/
-            }else {
-                //$hoursAmount = $workTime -> hoursAmount;
-                //$jsonData = json_encode($workTime);
-                //$date = $workTime -> date;*/
-                $p = 'k';
+
             }
         }else {
-            $hoursAmount = 0;
-            $jsonData = json_encode(0);
             $workTimes = [];
             Log::info('user null');
         }
 
-        return view('work-time', ['userId' => $userId, 'currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes]);
+        return view('work-time', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse

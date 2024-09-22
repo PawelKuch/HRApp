@@ -32,6 +32,8 @@ Route::get('edit-user/{userId}', [\App\Http\Controllers\mainTestController::clas
 
 Route::post('edit-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'editUser']) -> name('update-user');
 
+Route::get('block-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'blockUser']) -> name('block-user');
+
 Route::get('/work-time/{userId}', [\App\Http\Controllers\mainTestController::class, 'getWorkTimePage']) -> name('work-time');
 
 Route::post('/work-time/{userId}', [\App\Http\Controllers\mainTestController::class, 'calculateWorkTime']) -> name('calculate-work-time');
@@ -39,3 +41,5 @@ Route::post('/work-time/{userId}', [\App\Http\Controllers\mainTestController::cl
 Route::get('/worktimes', [\App\Http\Controllers\mainTestController::class, 'getAllWorkTimes']) -> name('work-times');
 
 Route::get('/delete-all-worktimes', [\App\Http\Controllers\mainTestController::class, 'deleteAllWorktimes']) -> name('delete-all-worktimes');
+
+Route::get('/unblock-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'unblockUser']) -> name('unblock-user');

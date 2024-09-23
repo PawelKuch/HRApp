@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
     <link rel="stylesheet" href="{{asset('css/menu.css')}}">
+    <link rel="stylesheet" href="{{asset('css/edit-user.css')}}">
 </head>
 <body>
 @include('includes.menu-navigation')

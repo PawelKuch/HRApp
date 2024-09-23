@@ -4,21 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\WorkTime;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 
+
 class mainTestController extends Controller
 {
+    protected UserService $userService;
+
+    public function __construct(UserService $userService) {
+        $this->userService = $userService;
+    }
+
     public function index() : JsonResponse{
         /*$user = new User([
             'name' => 'name11',
@@ -58,26 +65,27 @@ class mainTestController extends Controller
             'password' => ['required'],
         ]);
 
-        if(Auth::attempt($credentials)){
+        $user = User::where('email', $credentials['email']) -> first();
+        if(!$user -> is_blocked && Auth::attempt($credentials)) {
             $request->session()->regenerate();
             return redirect()->intended(route('main-page'));
+        }else if ($user -> is_blocked) {
+            return back()->withErrors(['userBlocked' => 'The account connected to the given email is blocked. If you consider it as a mistake, contact the administrator please']);
         }
         return back()->withErrors(['credentials' => 'The provided credentials do not match our records.']);
     }
 
    public function createUser(Request $request):\Illuminate\Http\RedirectResponse
     {
-        $user = new User();
-        $randomUserId = Str::uuid() ->toString();
         $data = $request -> all();
-        $user -> userId = $randomUserId;
-        $user -> name = $data['name'];
-        $user -> surname = $data['surname'];
-        $user -> email = $data['email'];
-        $user -> password = Hash::make($data['password']);
-        $user -> save();
-
-        return redirect()->route('users'); //users to nazwa route czyli w web.php -> name()
+        $name = $data['name'];
+        $surname = $data['surname'];
+        $email = $data['email'];
+        $password = Hash::make($data['password']);
+        if($this -> userService -> createUser($name, $surname, $email, $password)){
+            return redirect()->route('users') -> with('message', 'User has been created!');
+        }
+        return redirect()->route('users') -> withErrors('message','Something went wrong!');
     }
 
     public function getCreateUserForm() : View
@@ -85,22 +93,22 @@ class mainTestController extends Controller
         return view('create-user-form');
     }
 
-    public function getUsers():\Illuminate\View\View{
-        $users = User::all();
+    public function getUsers(): View{
+        $users = $this -> userService -> getUsers();
         return view('users', ['users' => $users]);
     }
 
-    public function deleteAllUsers():\Illuminate\Http\RedirectResponse {
+    public function deleteAllUsers(): RedirectResponse {
         DB::table('users')->delete();
         return redirect() -> route('create-user');
     }
 
-    public function deleteUser($id):\Illuminate\Http\RedirectResponse {
+    public function deleteUser($id): RedirectResponse {
         $user = User::findByUserId($id);
         if($user){
             $user -> delete();
         }else {Log::info("User not found. ID: " . $id);}
-        return redirect() -> route('create-user');
+        return redirect() -> route('users');
     }
 
     public function getEditUserPage($userId) : View
@@ -199,11 +207,9 @@ class mainTestController extends Controller
     {
         $startHour = (int) explode(':', $request -> input('startHour'))[0];
         $startMinute = (int) explode(':', $request -> input('startMinute'))[1];
-
         $endHour = (int) explode(':', $request -> input('endHour'))[0];
         $endMinute = (int) explode(':', $request -> input('endMinute'))[1];
         $dateFromInput = $request -> input('date');
-        $date = Carbon::createFromDate($dateFromInput);
 
         $startDate = Carbon::createFromTime($startHour, $startMinute);
         $endDate = Carbon::createFromTime($endHour, $endMinute);
@@ -236,5 +242,6 @@ class mainTestController extends Controller
         DB::table('work_times')->delete();
         return redirect() -> route('work-times');
     }
+
 
 }

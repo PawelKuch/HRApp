@@ -30,10 +30,6 @@ class WorkTime extends Model
 
     protected $casts = [];
 
-    public static function findWorkTimeByUserId($userId) : ?WorkTime{
-        return self::where('user_id', $userId) -> first(); //user_id odnosi się do kolumny w bazie danych.
-    }
-
     public function user() : belongsTo{
         return $this->belongsTo(User::class);
     }

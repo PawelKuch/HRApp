@@ -41,6 +41,9 @@
     @error('credentials')
         {{$message}}
     @enderror
+    @error('userBlocked')
+        {{$message}}
+    @enderror
 </div>
 
 

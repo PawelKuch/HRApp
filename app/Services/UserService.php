@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
@@ -31,8 +32,39 @@ class UserService {
         return false;
     }
 
+    public function updateUser(User $user, $data) : bool
+    {
+        if($this -> userRepository -> updateUser($user, $data)){
+            return true;
+        }
+        return false;
+    }
+
     public function getUsers() : Collection
     {
         return $this->userRepository -> getUsers();
+    }
+
+    public function getUserByUserId($user_id) : ?User
+    {
+        return $this->userRepository -> getUserByUserId($user_id);
+    }
+
+    public function blockUser($userId) : void {
+        $user = $this->userRepository -> getUserByUserId($userId);
+        if($user){
+            $user -> is_blocked = true;
+            $user -> save();
+        }else {
+            Log::warning("User Service: User not found: $userId");
+        }
+
+    }
+
+    public function unblockUser($userId) : void
+    {
+        $user = $this -> userRepository -> getUserByUserId($userId);
+        $user -> is_blocked = false;
+        $user -> save();
     }
 }

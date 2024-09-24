@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\WorkTime;
 use App\Services\UserService;
+use App\Services\WorkTimeService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -21,9 +22,11 @@ use Illuminate\View\View;
 class mainTestController extends Controller
 {
     protected UserService $userService;
+    protected WorkTimeService $workTimeService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(UserService $userService, WorkTimeService $workTimeService) {
         $this->userService = $userService;
+        $this->workTimeService = $workTimeService;
     }
 
     public function index() : JsonResponse{
@@ -113,38 +116,32 @@ class mainTestController extends Controller
 
     public function getEditUserPage($userId) : View
     {
-        $user = User::findByUserId($userId);
+        $user = $this -> userService -> getUserByUserId($userId);
         return view('edit-user', ['user' => $user]);
     }
 
     public function editUser($userId, Request $request) : RedirectResponse
     {
-        $user = User::findByUserId($userId);
+        $user = $this ->userService -> getUserByUserId($userId);
         $data = $request->validate([
             'name' => ['required'],
             'surname' => ['required'],
             'email' => ['required', 'email'],
         ]);
-        $user -> name = $data['name'];
-        $user -> surname = $data['surname'];
-        $user -> email  = $data['email'];
-        $user -> save();
+
+        $this -> userService -> updateUser($user, $data);
         return redirect() -> route('edit-user', $userId);
     }
 
     public  function  blockUser($userId) : RedirectResponse
     {
-        $user = User::findByUserId($userId);
-        $user -> is_blocked = true;
-        $user -> save();
+        $this -> userService -> blockUser($userId);
         return redirect() -> route('users');
     }
 
     public function unblockUser($userId) : RedirectResponse
     {
-        $user = User::findByUserId($userId);
-        $user -> is_blocked = false;
-        $user -> save();
+        $this -> userService -> unblockUser($userId);
         return redirect() -> route('users');
     }
 
@@ -220,16 +217,10 @@ class mainTestController extends Controller
 
         $hoursAmountTime = Carbon::createFromTime($hoursAmount, $minutesAmount) -> format('H:i');
 
-        $user = User::findByUserId($userId);
-        $workTime = new WorkTime();
-        $workTime -> user() -> associate($user);
-        $workTime -> startDate = $startDate -> format('H:i');
-        $workTime -> endDate = $endDate ->format('H:i');
-        $workTime -> hoursAmount = $hoursAmountTime;
-        $workTime -> date = $dateFromInput;
+        $user = $this -> userService -> getUserByUserId($userId);
+        $this -> workTimeService -> createWorkTime($user, $startDate, $endDate, $hoursAmountTime, $dateFromInput);
 
         Log::info('calculated wywołane');
-        $workTime -> save();
         return redirect() -> route('work-time', ['userId' => $userId]);
     }
 

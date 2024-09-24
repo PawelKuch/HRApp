@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository {
 
@@ -15,27 +16,33 @@ class UserRepository {
         return false;
     }
 
-    public function getUsers() : Collection
+    public function getUsers() : ?Collection
     {
         return User::all();
     }
 
-    public function getUserById($id) : object
+    public function getUserById($id) : ?object
     {
         return User::find($id);
     }
 
-    public function getUserByUserId($userId) : User
+    public function getUserByUserId($userId) : ?User
     {
-        return User::where('user_id', $userId) -> first();
+       $user = User::where('userId', $userId) -> first();
+        if($user){
+            Log::warning("userRepository: user found.");
+            return $user;
+        }
+            Log::warning("UserRepository: User not found: $userId");
+            return $user;
     }
 
-    public function getUserByEmail($email) : User
+    public function getUserByEmail($email) : ?User
     {
         return User::where('email', $email)->first();
     }
 
-    public function getUsersByName($name) : Collection
+    public function getUsersByName($name) : ?Collection
     {
         return User::where('name', $name) -> get();
     }

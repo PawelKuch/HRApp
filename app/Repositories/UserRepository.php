@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,35 +17,29 @@ class UserRepository {
         return false;
     }
 
-    public function getUsers() : ?Collection
+    public function getUsers() : Collection
     {
-        return User::all();
+        if($users = User::all()){
+            return $users;
+        }
+        throw new ModelNotFoundException("getUsers: No users found");
     }
 
-    public function getUserById($id) : ?object
+    public function getUserById($id) : User
     {
-        return User::find($id);
+        if($user = User::find($id)){
+            return $user;
+        }
+        throw new ModelNotFoundException("No user found");
     }
 
     public function getUserByUserId($userId) : ?User
     {
        $user = User::where('userId', $userId) -> first();
         if($user){
-            Log::warning("userRepository: user found.");
             return $user;
         }
-            Log::warning("UserRepository: User not found: $userId");
-            return $user;
-    }
-
-    public function getUserByEmail($email) : ?User
-    {
-        return User::where('email', $email)->first();
-    }
-
-    public function getUsersByName($name) : ?Collection
-    {
-        return User::where('name', $name) -> get();
+            throw new ModelNotFoundException("No user found");
     }
 
     public function deleteUserByUserId($userId) : bool

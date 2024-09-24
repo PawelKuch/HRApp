@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -42,12 +43,22 @@ class UserService {
 
     public function getUsers() : Collection
     {
-        return $this->userRepository -> getUsers();
+        try{
+            return $this->userRepository -> getUsers();
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return collect();
+        }
     }
 
-    public function getUserByUserId($user_id) : ?User
+    public function getUserByUserId($user_id) : User
     {
-        return $this->userRepository -> getUserByUserId($user_id);
+        try {
+            return $this->userRepository -> getUserByUserId($user_id);
+        } catch (Exception $e){
+            Log::error($e->getMessage());
+            return new User();
+        }
     }
 
     public function blockUser($userId) : void {

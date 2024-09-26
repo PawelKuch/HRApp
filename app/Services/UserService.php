@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -45,7 +45,7 @@ class UserService {
     {
         try{
             return $this->userRepository -> getUsers();
-        }catch (Exception $e){
+        }catch (ModelNotFoundException $e){
             Log::error($e->getMessage());
             return collect();
         }
@@ -55,7 +55,7 @@ class UserService {
     {
         try {
             return $this->userRepository -> getUserByUserId($user_id);
-        } catch (Exception $e){
+        } catch (ModelNotFoundException $e){
             Log::error($e->getMessage());
             return new User();
         }

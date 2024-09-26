@@ -5,7 +5,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+
 
 class UserRepository {
 
@@ -33,7 +33,7 @@ class UserRepository {
         throw new ModelNotFoundException("No user found");
     }
 
-    public function getUserByUserId($userId) : ?User
+    public function getUserByUserId($userId) : User
     {
        $user = User::where('userId', $userId) -> first();
         if($user){

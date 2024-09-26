@@ -186,51 +186,42 @@ class mainTestController extends Controller
             $minute++;
         }
 
-        if($user = User::findByUserId($userId)){
-            $workTimes = WorkTime::where('user_id', $user -> id) -> get();
-            if($workTimes == null){
-                Log::info("WorkTime not found");
-
-            }
+        if($user = $this -> userService -> getUserByUserId($userId)){
+            $idOfUser = $user -> id;
+            $workTimes = $this -> workTimeService -> getWorkTimeByIdOfUser($idOfUser);
         }else {
-            $workTimes = [];
+            $workTimes = collect();
             Log::info('user null');
         }
-
         return view('work-time', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
     {
-        $startHour = (int) explode(':', $request -> input('startHour'))[0];
-        $startMinute = (int) explode(':', $request -> input('startMinute'))[1];
-        $endHour = (int) explode(':', $request -> input('endHour'))[0];
-        $endMinute = (int) explode(':', $request -> input('endMinute'))[1];
-        $dateFromInput = $request -> input('date');
+        $startHour = $request -> input('startHour', 0);
+        $startMinute = $request -> input('startMinute', 0);
+        $endHour = $request -> input('endHour', 0);
+        $endMinute = $request -> input('endMinute', 0);
+        $workTimeDate = $request -> input('date');
 
-        $startDate = Carbon::createFromTime($startHour, $startMinute);
-        $endDate = Carbon::createFromTime($endHour, $endMinute);
-        $minutes = $startDate -> diffInMinutes($endDate);
+        $startDate = $this -> workTimeService -> getStartDate($startHour, $startMinute);
+        $endDate = $this -> workTimeService -> getEndDate($endHour, $endMinute);
+        $hoursAmountTime = $this -> workTimeService -> calculateHoursAmount($startHour, $startMinute, $endHour, $endMinute);
 
-        $hoursAmount = floor($minutes / 60);
-        $minutesAmount = $minutes % 60;
-
-        $hoursAmountTime = Carbon::createFromTime($hoursAmount, $minutesAmount) -> format('H:i');
 
         $user = $this -> userService -> getUserByUserId($userId);
-        $this -> workTimeService -> createWorkTime($user, $startDate, $endDate, $hoursAmountTime, $dateFromInput);
+        $this -> workTimeService -> createWorkTime($user, $startDate, $endDate, $hoursAmountTime, $workTimeDate);
 
-        Log::info('calculated wywołane');
         return redirect() -> route('work-time', ['userId' => $userId]);
     }
 
     public function getAllWorkTimes() : View{
-        $workTimes = WorkTime::all();
+        $workTimes = $this -> workTimeService -> getAllWorkTimes();
         return view('worktimes', ['workTimes' => $workTimes]);
     }
 
     public function deleteAllWorktimes() : RedirectResponse{
-        DB::table('work_times')->delete();
+        $this -> workTimeService -> deleteAllWorkTimes();
         return redirect() -> route('work-times');
     }
 

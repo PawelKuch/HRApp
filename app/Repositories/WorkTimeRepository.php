@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\WorkTime;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 class WorkTimeRepository {
 
@@ -14,6 +16,25 @@ class WorkTimeRepository {
         return false;
     }
 
+    public function getWorkTimesByIdOfUser($id) : Collection
+    {
+        if($workTimes = WorkTime::where('user_id', $id)->get()){
+            return $workTimes;
+        }
+        throw new ModelNotFoundException("Worktime by id of user was not found");
+    }
 
+    public function getAllWorkTimes() : Collection
+    {
+        return WorkTime::all();
+    }
+
+    public function deleteAllWorkTimes() : bool
+    {
+        if(DB::table('work_times')->delete()){
+            return true;
+        }
+        return false;
+    }
 }
 

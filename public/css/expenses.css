@@ -1,0 +1,16 @@
+.container{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#form-div {
+    display: flex;
+    justify-content: center;
+}
+
+#modal-title-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

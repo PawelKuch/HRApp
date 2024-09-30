@@ -73,4 +73,9 @@ class User extends Authenticatable
         return $this->hasMany(WorkTime::class);
     }
 
+    public function expense() : HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+
 }

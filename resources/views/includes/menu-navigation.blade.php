@@ -15,8 +15,9 @@
                 @endguest
                 @auth
                     <li><a href='{{route('sign-out')}}'>Sign out</a></li>
-                    <li><a href='{{route('work-time', ['userId' => Auth::user()-> userId, 'month' => \Carbon\Carbon::now() -> month, 'year' => \Carbon\Carbon::now() -> year]) }}'>Work time</a></li>
-                    @if(Auth::user()->role == 'admin')
+                    <li><a href='{{route('worktime', ['userId' => Auth::user()-> userId, 'month' => \Carbon\Carbon::now() -> month, 'year' => \Carbon\Carbon::now() -> year]) }}'>Work time</a></li>
+                    <li><a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a></li>
+                        @if(Auth::user()->role == 'admin')
                         <li><a href='{{route('users')}}'>Users</a></li>
                     @endif
                         zalogowany jako {{Auth::user() -> name}}

@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="css/menu.css">
 </head>
 <body>
-    <div class="container">
-        @include('includes.menu-navigation')
+@include('includes.menu-navigation')
+<div class="container">
         <div id="create-user-form-container">
                 <div id="form-header">
                     Create user

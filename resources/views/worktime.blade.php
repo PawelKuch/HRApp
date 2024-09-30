@@ -4,6 +4,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
+    <link rel="stylesheet" href="{{asset('css/worktime.css')}}">
 
     <style>
     </style>
@@ -13,11 +14,11 @@
 
 <div class="container mt-3">
 {{$action}}
-    <a href="{{route('work-time', ['userId' => $userId, 'month' => $currentMonth -> copy() -> subMonth() ->  month,
+    <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> subMonth() ->  month,
             'year' => $currentMonth -> year, 'action' => 'prev'])}}"><button class="btn btn-dark">Prev month</button></a>
 
 
-    <a href="{{route('work-time', ['userId' => $userId, 'month' => $currentMonth -> copy() -> addMonth() -> month,
+    <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> addMonth() -> month,
             'year' => $currentMonth -> year, 'action' => 'next'])}}"><button class="btn btn-dark">Next month</button></a>
 
     <table class="table">
@@ -78,11 +79,15 @@
                 </td>
             </tr>
             @endforeach
+            <tr class="separator">
+                <td colspan="3" >Total hours</td>
+                <td> {{$totalHours}}</td>
+            </tr>
         </tbody>
     </table>
   date: {{$currentMonth}} <br>
-    day: {{$currentMonth -> dayName}}
-
+    day: {{$currentMonth -> dayName}} <br>
+    total hours in the given month: {{$totalHours}} <br>
     <a href="/delete-all-worktimes"><button class="btn btn-dark">delete all worktimes</button></a>
 </div>
 

@@ -6,15 +6,18 @@ use App\Models\User;
 use App\Models\WorkTime;
 use App\Repositories\WorkTimeRepository;
 use Carbon\Carbon;
+use Carbon\Month;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class WorkTimeService {
     protected WorkTimeRepository $workTimeRepository;
+    protected UserService $userService;
 
-    public function __construct(WorkTimeRepository $workTimeRepository) {
+    public function __construct(WorkTimeRepository $workTimeRepository, UserService $userService) {
     $this -> workTimeRepository = $workTimeRepository;
+    $this -> userService = $userService;
     }
 
     public function createWorkTime(User $user, $startDate, $endDate, $hoursAmountTime, $date) : bool
@@ -85,5 +88,51 @@ class WorkTimeService {
         return false;
     }
 
+    public function getDaysArray($date) : array
+    {
+        $days = [];
+        $daysInMonth = $date -> daysInMonth;
+        $year = $date -> year;
+        $month = $date -> month;
+        for($day = 1; $day <= $daysInMonth; $day++){
+            $days[] = Carbon::create($year, $month, $day);
+        }
+        return $days;
+    }
+
+    public function get24HoursArray() : array
+    {
+        $hour = 0;
+        $hours = [];
+        while($hour < 24){
+            $hours[] = Carbon::createFromTime($hour, 0) -> format('H:i');
+            $hour++;
+        }
+        return $hours;
+    }
+
+    public function getMinutesArray() : array
+    {
+        $minutes = [];
+        $minute = 0;
+        while($minute < 60){
+            $minutes[] = Carbon::createFromTime(0, $minute) -> format('H:i');
+            $minute++;
+        }
+        return $minutes;
+    }
+
+    public function getTotalMonthlyHoursForUser(User $user, int $year, int $month) : float {
+        $workTimes = $this -> workTimeRepository -> getMonthlyWorkTimesForUser($user, $year, $month);
+
+        $totalHours = 0;
+        foreach ($workTimes as $workTime) {
+            $hours = (float) explode(':', $workTime -> hoursAmount)[0];
+            $minutes = (float) explode(':', $workTime -> hoursAmount)[1];
+            $totalTime = $hours + $minutes/60;
+            $totalHours += $totalTime;
+        }
+        return $totalHours;
+    }
 }
 

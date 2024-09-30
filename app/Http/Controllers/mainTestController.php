@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
 use App\Models\User;
 use App\Models\WorkTime;
+use App\Repositories\WorkTimeRepository;
+use App\Services\ExpenseService;
 use App\Services\UserService;
 use App\Services\WorkTimeService;
 use Carbon\Carbon;
@@ -23,34 +26,15 @@ class mainTestController extends Controller
 {
     protected UserService $userService;
     protected WorkTimeService $workTimeService;
+    protected WorkTimeRepository $workTimeRepository;
+    protected ExpenseService $expenseService;
 
-    public function __construct(UserService $userService, WorkTimeService $workTimeService) {
+    public function __construct(UserService $userService, WorkTimeService $workTimeService, ExpenseService $expenseService) {
         $this->userService = $userService;
         $this->workTimeService = $workTimeService;
+        $this->expenseService = $expenseService;
     }
 
-    public function index() : JsonResponse{
-        /*$user = new User([
-            'name' => 'name11',
-            'surname' => 'surname',
-            'email' => 'test1@test.com',
-            'password' => 'password',
-        ]);*/
-
-        $user = new User();
-
-        $user -> fill([
-            'name' => 'Pawel',
-            'surname' => 'Kucharskim',
-            'email' => 'mailsada',
-            'password' => "haslow"]);
-        $email = $user -> getAttribute('email');
-        //return response() -> json($user);
-        $userArray = $user -> toArray();
-        $userArray['email'] = $email;
-        $jsonUserArray = json_encode($userArray);
-        return response()-> json($jsonUserArray);
-    }
 
    public function getMainPage() : View {
         return view('main-page');
@@ -168,32 +152,22 @@ class mainTestController extends Controller
 
         $currentMonth = Carbon::create($year, $month, 1);
 
-        $daysInMonth = $currentMonth -> daysInMonth;
-        $days = [];
-        for($day = 1; $day <= $daysInMonth; $day++){
-            $days[] = Carbon::create($year, $month, $day);
-        }
-        $hour = 0;
-        $hours = [];
-        while($hour < 24){
-            $hours[] = Carbon::createFromTime($hour, 0) -> format('H:i');
-            $hour++;
-        }
-        $minute = 0;
-        $minutes = [];
-        while($minute < 61){
-            $minutes[] = Carbon::createFromTime(0, $minute) -> format('H:i');
-            $minute++;
-        }
+        $days = $this -> workTimeService -> getDaysArray($currentMonth);
 
+        $hours = $this -> workTimeService -> get24HoursArray();
+        $minutes = $this -> workTimeService -> getMinutesArray();
+        $totalHours = 0;
         if($user = $this -> userService -> getUserByUserId($userId)){
             $idOfUser = $user -> id;
             $workTimes = $this -> workTimeService -> getWorkTimeByIdOfUser($idOfUser);
+            $totalHours = $this -> workTimeService -> getTotalMonthlyHoursForUser($user, $month, $year);
         }else {
             $workTimes = collect();
             Log::info('user null');
         }
-        return view('work-time', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action]);
+
+
+        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
@@ -212,7 +186,7 @@ class mainTestController extends Controller
         $user = $this -> userService -> getUserByUserId($userId);
         $this -> workTimeService -> createWorkTime($user, $startDate, $endDate, $hoursAmountTime, $workTimeDate);
 
-        return redirect() -> route('work-time', ['userId' => $userId]);
+        return redirect() -> route('worktime', ['userId' => $userId]);
     }
 
     public function getAllWorkTimes() : View{
@@ -222,8 +196,34 @@ class mainTestController extends Controller
 
     public function deleteAllWorktimes() : RedirectResponse{
         $this -> workTimeService -> deleteAllWorkTimes();
-        return redirect() -> route('work-times');
+        return redirect() -> route('worktimes');
     }
 
+    public function getExpensesPage($userId) : View
+    {
+        $expensesForUser = $this -> expenseService -> getExpensesForUser($userId);
+        $users = $this -> userService -> getUsers();
+        $expenses = $this -> expenseService -> getAllExpenses();
+        $columns = \Illuminate\Support\Facades\Schema::getColumnListing('expenses');
+        //dd($columns);
+        return view('expenses', ['expensesForUser' => $expensesForUser,'expenses' => $expenses ,'users' => $users]);
+    }
+
+    public function addExpense($userId, Request $request) : RedirectResponse
+    {
+        $data = $request -> all();
+        $user = $this -> userService -> getUserByUserId($userId);
+        if($user){
+            Log::warning("user found");
+            $userId = $user -> userId;
+        }else {
+            Log::warning("user not found");
+            $userId = 0;
+        }
+        //$date = (Carbon::now() -> year, Carbon::now() -> month, Carbon::now() -> month, Carbon::now() -> day);
+        $date = Carbon::now();
+        $this -> expenseService -> createExpense($user, $data['invoiceNo'], $data['value'], $date, $data['category'], $data['description']);
+        return redirect() -> route('expenses', ['userId' => $userId]);
+    }
 
 }

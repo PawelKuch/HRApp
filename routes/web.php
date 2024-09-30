@@ -8,9 +8,12 @@ Route::get('/', function () {
 
 Route::get('/controller', [\App\Http\Controllers\mainTestController::class, 'index']);
 
-Route::get('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'getCreateUserForm']);
+Route::get('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'getCreateUserForm'])
+    ->middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::post('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'createUser'])->name('create-user');
+Route::post('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'createUser'])
+    ->name('create-user')
+    ->middleware(\App\Http\Middleware\AdminMiddleware::class);
 
 Route::get('/delete-all-users', [\App\Http\Controllers\mainTestController::class, 'deleteAllUsers']);
 
@@ -28,18 +31,32 @@ Route::get('/users', [\App\Http\Controllers\mainTestController::class, 'getUsers
     -> name('users')
     -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::get('edit-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'getEditUserPage']) -> name('edit-user');
+Route::get('edit-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'getEditUserPage'])
+    -> name('edit-user')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::post('edit-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'editUser']) -> name('update-user');
+Route::post('edit-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'editUser'])
+    -> name('update-user')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::get('block-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'blockUser']) -> name('block-user');
+Route::get('block-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'blockUser'])
+    -> name('block-user')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::get('/work-time/{userId}', [\App\Http\Controllers\mainTestController::class, 'getWorkTimePage']) -> name('work-time');
+Route::get('/work-time/{userId}', [\App\Http\Controllers\mainTestController::class, 'getWorkTimePage'])
+    -> name('worktime')
+    -> middleware(\App\Http\Middleware\UserMiddleware::class);
 
-Route::post('/work-time/{userId}', [\App\Http\Controllers\mainTestController::class, 'calculateWorkTime']) -> name('calculate-work-time');
+Route::post('/work-time/{userId}', [\App\Http\Controllers\mainTestController::class, 'calculateWorkTime'])
+    -> name('calculate-work-time')
+    -> middleware(\App\Http\Middleware\UserMiddleware::class);
 
-Route::get('/worktimes', [\App\Http\Controllers\mainTestController::class, 'getAllWorkTimes']) -> name('work-times');
+Route::get('/worktimes', [\App\Http\Controllers\mainTestController::class, 'getAllWorkTimes']) -> name('worktimes');
 
 Route::get('/delete-all-worktimes', [\App\Http\Controllers\mainTestController::class, 'deleteAllWorktimes']) -> name('delete-all-worktimes');
 
 Route::get('/unblock-user/{userId}', [\App\Http\Controllers\mainTestController::class, 'unblockUser']) -> name('unblock-user');
+
+Route::get('/expenses/{userId}', [\App\Http\Controllers\mainTestController::class, 'getExpensesPage']) -> name('expenses');
+
+Route::post('/expenses/{userId}', [\App\Http\Controllers\mainTestController::class, 'addExpense']) -> name('add-expense');

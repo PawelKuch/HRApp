@@ -12,16 +12,16 @@ class AdminMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
+        if (Auth::check() && Auth::user()->role == 'admin') {
             return $next($request);
+        } else if (Auth::check()) {
+            return redirect()->route('main-page');
         }
-
-        if(!$request->routeIs('sign-in')) return redirect()->route('sign-in');
-
-        return response('Unauthorized.');
+        return redirect()->route('sign-in');
     }
+
 }

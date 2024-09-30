@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\WorkTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
@@ -36,5 +37,14 @@ class WorkTimeRepository {
         }
         return false;
     }
+
+    public function getMonthlyWorkTimesForUser(User $user, int $month, int $year) : Collection
+    {
+        return WorkTime::where('user_id', $user->id)
+            -> whereYear('date', $year)
+            -> whereMonth('date', $month)
+            -> get();
+    }
+
 }
 

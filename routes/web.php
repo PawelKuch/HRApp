@@ -60,3 +60,15 @@ Route::get('/unblock-user/{userId}', [\App\Http\Controllers\mainTestController::
 Route::get('/expenses/{userId}', [\App\Http\Controllers\mainTestController::class, 'getExpensesPage']) -> name('expenses');
 
 Route::post('/expenses/{userId}', [\App\Http\Controllers\mainTestController::class, 'addExpense']) -> name('add-expense');
+
+Route::get('/settle-expense/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'settleTheExpense'])
+    -> name('settleTheExpense')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+
+Route::get('delete-expense/{userId}/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'deleteExpense'])
+    -> name('deleteExpense')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+
+Route::get('unsettle-expense/{userId}/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'unsettleExpense'])
+    -> name('unsettleExpense')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);

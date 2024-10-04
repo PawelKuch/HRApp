@@ -53,7 +53,7 @@ class UserRepository {
 
     public function updateUser($user, $data) : bool
     {
-        if($user::update($data)){
+        if($user -> update($data)){
             return true;
         }
         return false;
@@ -66,4 +66,5 @@ class UserRepository {
         }
         return false;
     }
+
 }

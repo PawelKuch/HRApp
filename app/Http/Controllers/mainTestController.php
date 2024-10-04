@@ -226,4 +226,25 @@ class mainTestController extends Controller
         return redirect() -> route('expenses', ['userId' => $userId]);
     }
 
+    public function settleTheExpense($expenseId) : RedirectResponse
+    {
+        $expense = $this->expenseService -> getExpenseByExpenseId($expenseId);
+        $expense -> is_settled = true;
+        $user = User::find($expense -> user_id);
+        $userId = $user -> userId;
+        $this -> expenseService -> saveExpense($expense);
+        return redirect() -> route('expenses', ['userId' => $userId]);
+    }
+
+    public function deleteExpense($userId, $expenseId) : RedirectResponse
+    {
+        $this -> expenseService -> deleteExpense($expenseId);
+        return redirect() -> route('expenses', ['userId' => $userId]);
+    }
+
+    public function unsettleExpense($userId, $expenseId) : RedirectResponse
+    {
+        $this -> expenseService -> unsettleExpense($expenseId);
+        return redirect() -> route('expenses', ['userId' => $userId]);
+    }
 }

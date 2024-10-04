@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\ExpenseRepository;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
@@ -34,7 +35,12 @@ class ExpenseService
         $this -> expenseRepository -> saveExpenese($expense);
     }
 
-    public function getExpensesForUser($userId) : \Illuminate\Database\Eloquent\Collection
+    public function saveExpense(Expense $expense) : void
+    {
+        $expense -> save();
+    }
+
+    public function getExpensesForUser($userId) : Collection
     {
         $user = $this -> userService -> getUserByUserId($userId);
         return $this->expenseRepository -> getExpensesForUser($user);
@@ -42,5 +48,28 @@ class ExpenseService
     public function getAllExpenses() : \Illuminate\Support\Collection
     {
         return $this -> expenseRepository -> getAllExpenses();
+    }
+
+    public function getExpenseByExpenseId($expenseId) : Expense {
+        return $this -> expenseRepository -> getExpenseByExpenseId($expenseId);
+    }
+
+    public function settleTheExpense($expenseId) : void
+    {
+        $expense = $this -> expenseRepository -> getExpenseByExpenseId($expenseId);
+        $expense -> is_settled = true;
+        $expense -> save();
+    }
+
+    public function deleteExpense($expenseId) : void {
+        $expense = $this -> expenseRepository -> getExpenseByExpenseId($expenseId);
+        $this -> expenseRepository -> deleteExpense($expense);
+    }
+
+    public function unsettleExpense($expenseId) : void
+    {
+        $expense = $this -> expenseRepository -> getExpenseByExpenseId($expenseId);
+        $expense -> is_settled = false;
+        $expense -> save();
     }
 }

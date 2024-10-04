@@ -26,4 +26,15 @@ class ExpenseRepository
     {
         return Expense::all();
     }
+
+    public function getExpenseByExpenseId($expenseId) : Expense
+    {
+        return Expense::where('expense_id', $expenseId) -> first();
+    }
+
+    public function deleteExpense(Expense $expense) : bool {
+        if($expense -> delete()) return true;
+        return false;
+    }
+
 }

@@ -24,7 +24,7 @@ class Expense extends Authenticatable
         'date',
         'category',
         'description',
-        'status',
+        'isSettled',
     ];
 
     public function user() : belongsTo {

@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
 use App\Models\User;
-use App\Models\WorkTime;
 use App\Repositories\WorkTimeRepository;
 use App\Services\ExpenseService;
 use App\Services\UserService;
 use App\Services\WorkTimeService;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -165,9 +161,9 @@ class mainTestController extends Controller
             $workTimes = collect();
             Log::info('user null');
         }
+        $previousMonths = $this -> workTimeService -> getPreviousMonthsRange($currentMonth);
 
-
-        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours]);
+        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
@@ -204,7 +200,6 @@ class mainTestController extends Controller
         $expensesForUser = $this -> expenseService -> getExpensesForUser($userId);
         $users = $this -> userService -> getUsers();
         $expenses = $this -> expenseService -> getAllExpenses();
-        $columns = \Illuminate\Support\Facades\Schema::getColumnListing('expenses');
         //dd($columns);
         return view('expenses', ['expensesForUser' => $expensesForUser,'expenses' => $expenses ,'users' => $users]);
     }

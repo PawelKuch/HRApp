@@ -1,4 +1,8 @@
+body {
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
 .separator {
     border-top: 2px solid black;
-
 }

@@ -134,5 +134,16 @@ class WorkTimeService {
         }
         return $totalHours;
     }
+
+    public function getPreviousMonthsRange(Carbon $date) : array {
+        $months = [];
+        for ($i = 4; $i>-1; $i--){
+            $monthName = $date -> copy() -> subMonths($i) -> format('F');
+            $monthNumber = $date -> copy() -> subMonths($i) -> month;
+            $months [] = ['name'=> $monthName, 'number'=> $monthNumber];
+        }
+        return $months;
+    }
+
 }
 

@@ -138,11 +138,31 @@ class WorkTimeService {
     public function getPreviousMonthsRange(Carbon $date) : array {
         $months = [];
         for ($i = 4; $i>-1; $i--){
-            $monthName = $date -> copy() -> subMonths($i) -> format('F');
+            $monthName = $date -> copy() -> subMonths($i) -> format('F Y');
             $monthNumber = $date -> copy() -> subMonths($i) -> month;
-            $months [] = ['name'=> $monthName, 'number'=> $monthNumber];
+            $year = $date -> copy() -> subMonths($i) -> year;
+            $months [] = ['name'=> $monthName, 'number'=> $monthNumber, 'year' => $year];
         }
         return $months;
+    }
+
+    public function getNextMonthsRange(Carbon $date) : array
+    {
+        $months = [];
+        for ($i = 1; $i<5; $i++){
+            $monthName = $date -> copy() -> addMonths($i) -> format('F Y');
+            $monthNumber = $date -> copy() -> addMonths($i) -> month;
+            $year = $date -> copy() -> addMonths($i) -> year;
+            $months [] = ['name'=> $monthName, 'number'=> $monthNumber, 'year'=> $year];
+        }
+        return $months;
+    }
+
+    public function getMonthsRange(Carbon $date) : array
+    {
+        $previousAndPresentMonth = $this->getPreviousMonthsRange($date);
+        $nextMonths = $this->getNextMonthsRange($date);
+        return array_merge($previousAndPresentMonth, $nextMonths);
     }
 
 }

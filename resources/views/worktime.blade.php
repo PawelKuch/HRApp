@@ -18,9 +18,8 @@
 
     <select id="month">
         @foreach($previousMonths as $previousMonth)
-            <option value="{{$previousMonth['number']}}" @if($previousMonth['name'] == $currentMonth -> format('F')) selected @endif>{{$previousMonth['name']}}</option>
+            <option value="{{$previousMonth['number']}}-{{$previousMonth['year'] }}" @if($previousMonth['name'] == $currentMonth -> format('F Y')) selected @endif>{{$previousMonth['name']}}</option>
         @endforeach
-        <option value="{{$currentMonth -> month}}">{{$currentMonth -> copy() -> addMonth() -> format('F')}}</option>
     </select>
 
     <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> addMonth() -> month,
@@ -104,9 +103,10 @@
           monthSelect.addEventListener('change', function () {
               let userId = @json($userId).toString();
               let selectedMonth = this.value;
-              let year = @json($currentMonth -> year);
+              let [month, year] = this.value.split('-');
 
-              window.location.href = '/work-time/' + encodeURIComponent(userId) + '?month=' + encodeURIComponent(selectedMonth) + '&year=' + encodeURIComponent(year);
+
+              window.location.href = '/work-time/' + encodeURIComponent(userId) + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year);
           });
         }else {
             console.error('monthselect nie został znaleziony');

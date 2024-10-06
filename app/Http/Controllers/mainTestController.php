@@ -161,7 +161,8 @@ class mainTestController extends Controller
             $workTimes = collect();
             Log::info('user null');
         }
-        $previousMonths = $this -> workTimeService -> getPreviousMonthsRange($currentMonth);
+
+        $previousMonths = $this -> workTimeService -> getMonthsRange($currentMonth);
 
         return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths]);
     }

@@ -39,10 +39,10 @@
         </form>
     </div>
     @error('credentials')
-        {{$message}}
+    <div class="alert alert-danger">{{$message}}</div>
     @enderror
     @error('userBlocked')
-        {{$message}}
+    <div class="alert alert-danger">{{$message}}</div>
     @enderror
 </div>
 

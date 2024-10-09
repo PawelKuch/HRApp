@@ -12,7 +12,6 @@
 @include('includes.menu-navigation')
 
 <div class="container mt-3">
-
     <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> subMonth() ->  month,
             'year' => $currentMonth -> year, 'action' => 'prev'])}}"><i class="bi bi-arrow-left"></i></a>
 

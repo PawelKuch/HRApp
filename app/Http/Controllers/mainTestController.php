@@ -49,11 +49,16 @@ class mainTestController extends Controller
         ]);
 
         $user = User::where('email', $credentials['email']) -> first();
-        if(!$user -> is_blocked && Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('main-page'));
-        }else if ($user -> is_blocked) {
-            return back()->withErrors(['userBlocked' => 'The account connected to the given email is blocked. If you consider it as a mistake, contact the administrator please']);
+
+        if($user){
+            if(!$user -> is_blocked && Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect()->intended(route('main-page'));
+            }elseif ($user -> is_blocked && Auth::attempt($credentials)){
+                Auth::logout();
+                return back() -> withErrors(['userBlocked' => "An account connected to the given address email has been blocked. Please, contact the administrator if you consider it as a mistake."]);
+            }
+            return back()->withErrors(['credentials' => 'The provided credentials do not match our records.']);
         }
         return back()->withErrors(['credentials' => 'The provided credentials do not match our records.']);
     }
@@ -157,14 +162,18 @@ class mainTestController extends Controller
             $idOfUser = $user -> id;
             $workTimes = $this -> workTimeService -> getWorkTimeByIdOfUser($idOfUser);
             $totalHours = $this -> workTimeService -> getTotalMonthlyHoursForUser($user, $month, $year);
+            $userName = $user -> name;
+            $userSurname = $user -> surname;
         }else {
             $workTimes = collect();
             Log::info('user null');
+            $userName = '';
+            $userSurname = '';
         }
 
         $previousMonths = $this -> workTimeService -> getMonthsRange($currentMonth);
 
-        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths]);
+        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
@@ -242,5 +251,48 @@ class mainTestController extends Controller
     {
         $this -> expenseService -> unsettleExpense($expenseId);
         return redirect() -> route('expenses', ['userId' => $userId]);
+    }
+
+    public function getUsersWorktimePage() : View
+    {
+        return view('users-worktime', ['users' => $this -> userService -> getUsers()]);
+    }
+
+    public function getUserWorktimePage($userId, Request $request) : View
+    {
+        $month = $request -> query('month', Carbon::now()->month);
+        $year = $request -> query('year', Carbon::now()->year);
+
+        $action = $request -> input('action', null);
+
+        if($action === 'prev' && $month == 1) {
+            $year = $year - 1;
+        }else if($action === 'next' && $month == 12){
+            $year = $year + 1;
+        }
+
+        $currentMonth = Carbon::create($year, $month, 1);
+
+        $days = $this -> workTimeService -> getDaysArray($currentMonth);
+
+        $hours = $this -> workTimeService -> get24HoursArray();
+        $minutes = $this -> workTimeService -> getMinutesArray();
+        $totalHours = 0;
+        if($user = $this -> userService -> getUserByUserId($userId)){
+            $idOfUser = $user -> id;
+            $workTimes = $this -> workTimeService -> getWorkTimeByIdOfUser($idOfUser);
+            $totalHours = $this -> workTimeService -> getTotalMonthlyHoursForUser($user, $month, $year);
+            $userName = $user -> name;
+            $userSurname = $user -> surname;
+        }else {
+            $workTimes = collect();
+            Log::info('user null');
+            $userName = '';
+            $userSurname = '';
+        }
+
+        $previousMonths = $this -> workTimeService -> getMonthsRange($currentMonth);
+
+        return view('user-worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname]);
     }
 }

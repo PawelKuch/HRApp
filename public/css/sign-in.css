@@ -2,4 +2,11 @@ body {
     background-color: #edf2f7;
 }
 
+.alert{
+    text-align: center;
+}
+
+#sign-in-button-div {
+    margin-bottom: 10px;
+}
 

@@ -14,14 +14,32 @@
                     <li><a href='/sign-in'>Sign In</a></li>
                 @endguest
                 @auth
-                    <li><a href='{{route('sign-out')}}'>Sign out</a></li>
-                    <li><a href='{{route('worktime', ['userId' => Auth::user()-> userId, 'month' => \Carbon\Carbon::now() -> month, 'year' => \Carbon\Carbon::now() -> year]) }}'>Work time</a></li>
-                    <li><a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a></li>
-                        @if(Auth::user()->role == 'admin')
+                    @if(Auth::user()->role == 'admin')
                         <li><a href='{{route('users')}}'>Users</a></li>
+                        <li>
+                            <div class="dropdown">
+                                <a href="#" class="dropBtn">Employee manager</a>
+                                <div class="dropdown-content">
+                                    <a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a>
+                                    <a href="{{route('usersWorktime')}}">Users worktime</a>
+                                    <a href="#">Third option</a>
+                                </div>
+                            </div>
+                        </li>
+                    @else
+                        <li><a href='{{route('worktime', ['userId' => Auth::user()-> userId, 'month' => \Carbon\Carbon::now() -> month, 'year' => \Carbon\Carbon::now() -> year]) }}'>Work time</a></li>
+                        <li><a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a></li>
                     @endif
-                        zalogowany jako {{Auth::user() -> name}}
-                    @endauth
+                     <div class="dropdown">
+                         <a href="#" class="dropBtn">{{Auth::user() -> name}}</a>
+                         <div class="dropdown-content-user">
+                             <a href="#">Your profile</a>
+                             <a href="#">Your settings</a>
+                             <a href="#">Your account</a>
+                             <a href="{{route('sign-out')}}">Sign out</a>
+                         </div>
+                     </div>
+                @endauth
             </ul>
         </nav>
     </header>

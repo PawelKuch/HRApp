@@ -102,9 +102,12 @@
                                             <td>{{$expense -> date}}</td>
                                             <td>{{$expense -> is_settled}}</td>
                                             <td>
-                                                <span id="calculate-icon-span"><a href="{{route('settleTheExpense', ['expenseId' => $expense -> expense_id])}}"><i class="bi bi-calculator"></i></a></span>
+                                                @if($expense -> is_settled)
+                                                    <span id="unsettle-icon-span"><a href="{{route('unsettleExpense', ['userId' => $user -> userId, 'expenseId' => $expense -> expense_id])}}"><i class="bi bi-arrow-90deg-left"></i></a></span>
+                                                @else
+                                                    <span id="calculate-icon-span"><a href="{{route('settleTheExpense', ['expenseId' => $expense -> expense_id])}}"><i class="bi bi-calculator"></i></a></span>
+                                                @endif
                                                 <span id="delete-icon-span"><a href="{{route('deleteExpense', ['userId' => $user -> userId, 'expenseId' => $expense -> expense_id])}}"><i class="bi bi-trash text-dark"></i></a></span>
-                                                <span id="unsettle-icon-span"><a href="{{route('unsettleExpense', ['userId' => $user -> userId, 'expenseId' => $expense -> expense_id])}}"><i class="bi bi-arrow-90deg-left"></i></a></span>
                                             </td>
                                         </tr>
                                     @endif

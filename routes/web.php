@@ -65,10 +65,19 @@ Route::get('/settle-expense/{expenseId}', [\App\Http\Controllers\mainTestControl
     -> name('settleTheExpense')
     -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::get('delete-expense/{userId}/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'deleteExpense'])
+Route::get('/delete-expense/{userId}/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'deleteExpense'])
     -> name('deleteExpense')
     -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::get('unsettle-expense/{userId}/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'unsettleExpense'])
+Route::get('/unsettle-expense/{userId}/{expenseId}', [\App\Http\Controllers\mainTestController::class, 'unsettleExpense'])
     -> name('unsettleExpense')
     -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+
+Route::get('usersWorktime', [\App\Http\Controllers\mainTestController::class, 'getUsersWorktimePage'])
+    -> name('usersWorktime')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+
+Route::get('user-worktime/{userId}', [\App\Http\Controllers\mainTestController::class, 'getUserWorktimePage'])
+    -> name('userWorktime')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+

@@ -1,0 +1,33 @@
+.worktime-table {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#forward-btn:hover {
+    background-color: #9ca3af;
+}
+
+#forward-btn {
+    background-color: #f1f1f1;
+    padding: 5px;
+    margin: 5px;
+}
+
+a:link {
+    text-decoration: none;
+    color: black;
+}
+
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+    color: black;
+}

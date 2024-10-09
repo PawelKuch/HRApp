@@ -82,3 +82,54 @@ a:hover {
 a:link {
     text-decoration: none;
 }
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+}
+
+.dropdown-content-user {
+    display: none;
+    position: absolute;
+    right: 0;
+}
+
+.dropdown:hover .dropdown-content {
+    background-color: #f1f1f1;
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    white-space: nowrap;
+    padding-right: 10px;
+    padding-left: 5px;
+}
+
+.dropdown:hover .dropdown-content-user {
+    background-color: #f1f1f1;
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    white-space: nowrap;
+    padding-right: 10px;
+    padding-left: 5px;
+}
+
+.dropdown-content-user a {
+    color: black;
+}
+
+.dropdown-content a:hover {
+    background-color: #9ca3af;
+}
+
+.dropdown-content-user a:hover {
+    background-color: #9ca3af;
+}

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Repositories\WorkTimeRepository;
 use App\Services\ExpenseService;
+use App\Services\LeaveService;
 use App\Services\UserService;
 use App\Services\WorkTimeService;
 use Carbon\Carbon;
@@ -22,13 +22,14 @@ class mainTestController extends Controller
 {
     protected UserService $userService;
     protected WorkTimeService $workTimeService;
-    protected WorkTimeRepository $workTimeRepository;
     protected ExpenseService $expenseService;
+    protected LeaveService $leaveService;
 
-    public function __construct(UserService $userService, WorkTimeService $workTimeService, ExpenseService $expenseService) {
+    public function __construct(UserService $userService, WorkTimeService $workTimeService, ExpenseService $expenseService, LeaveService $leaveService) {
         $this->userService = $userService;
         $this->workTimeService = $workTimeService;
         $this->expenseService = $expenseService;
+        $this -> leaveService = $leaveService;
     }
 
 
@@ -41,7 +42,7 @@ class mainTestController extends Controller
        return view('sign-in');
    }
 
-    public function signIn(Request $request):\Illuminate\Http\RedirectResponse
+    public function signIn(Request $request) : RedirectResponse
     {
         $credentials = $request -> validate([
             'email' => ['required', 'email'],
@@ -63,7 +64,7 @@ class mainTestController extends Controller
         return back()->withErrors(['credentials' => 'The provided credentials do not match our records.']);
     }
 
-   public function createUser(Request $request):\Illuminate\Http\RedirectResponse
+   public function createUser(Request $request) : RedirectResponse
     {
         $data = $request -> all();
         $name = $data['name'];
@@ -295,4 +296,114 @@ class mainTestController extends Controller
 
         return view('user-worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname]);
     }
+
+    public function getUserSettingsPage($userId) : VIew
+    {
+        return view('user-settings', ['userId' => $userId]);
+    }
+
+    public function getYourAccountPage($userId) : View {
+        return view('your-account', ['userId' => $userId]);
+    }
+
+    public function getChangePasswordPage($userId) : View
+    {
+        $user = $this -> userService -> getUserByUserId($userId);
+        $email = $user -> email;
+        return view('change-password', ['email' => $email]);
+    }
+
+    public function changePassword($userId, Request $request) : RedirectResponse
+    {
+        $data = $request -> validate(
+            [
+                'current_password' => 'required',
+                'new_password' => 'required | confirmed',
+            ]);
+
+        $currentPassword = $data['current_password'];
+        $newPassword = $data['new_password'];
+        $passwordFromDB = Auth::user() -> password;
+        if(!Hash::check($currentPassword, $passwordFromDB)) {
+                return redirect() -> route('change-password', ['userId' => $userId]) -> withErrors(['incorrectPassword' => 'Incorrect password. You cannot change the one!',
+                    'incorrectNewPassword' => 'New password and confirm new password do not match.']);
+        }
+        $this -> userService -> changePassword($userId, $newPassword);
+        return redirect() -> route('change.password', ['userId' => $userId]);
+    }
+
+    public function getChangeEmailPage() : View
+    {
+        return view('change-email');
+    }
+
+    public function changeEmail(Request $request) : RedirectResponse
+    {
+        $data = $request -> validate([
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+        $password = $data['password'];
+        $newEmail = $data['email'];
+        $passwordFromDB = Auth::user() -> password;
+        if(!Hash::check($password, $passwordFromDB)){
+            return redirect() -> route('change.email') -> withErrors(['IncorrectPassword' => 'Wrong password! You cannot change the email!']);
+        }
+        $this -> userService -> changeEmail(Auth::user() -> userId, $newEmail);
+        return redirect() -> route('change.email');
+    }
+
+    public function getLeavesPage() : View
+    {
+        $leaves = $this -> leaveService -> getAllLeaves();
+        return view('leaves', ['leaves' => $leaves]);
+    }
+
+    public function addLeave(Request $request) : RedirectResponse
+    {
+
+        return redirect() -> route('leaves');
+    }
+
+    public function getUserLeavesPage(Request $request) : View{
+        $currentDate = Carbon::now();
+        $fromDateDay = $request -> input('from_date_day');
+        $fromDateMonth = $request -> input('from_date_month');
+        $fromDateYear = $request -> input('from_date_year');
+
+        $toDateDay = $request -> input('to_date_day');
+        $toDateMonth = $request -> input('to_date_month');
+        $toDateYear = $request -> input('to_date_year');
+
+        $fromDate = Carbon::createFromDate($fromDateYear, $fromDateMonth,$fromDateDay);
+        $toDate = Carbon::createFromDate($toDateYear, $toDateMonth, $toDateDay);
+
+        $user = Auth::user();
+        $this -> leaveService ->createLeave($user, $fromDate, $toDate);
+
+        $currentMonthDays = $this -> workTimeService -> getDaysArray($currentDate);
+        $currentMonth = $currentDate -> month;
+        $currentYear = $currentDate -> year;
+
+        $months = [];
+        for($i = 1; $i < 13; $i++)
+        {
+            $months[] = Carbon::createFromDate(2024, $i, 1);
+        }
+
+        $years = [];
+        $startYear = 2000;
+        $endYear = $currentYear + 5;
+        for($i = $startYear; $i <= $endYear; $i++){
+            $years[] = $i;
+        }
+
+        $id = $user -> id;
+        $leaves = $this -> leaveService -> getLeavesByIdOfUserAndGivenDate($id, $currentDate); //tutaj zmienić, że nie porownuje z created_at a z from date i z to date
+        //$leaves = $this -> leaveService -> getLeavesByIdOfUser($id);
+        return view('user-leaves', ['leaves' => $leaves,'currentDate' => $currentDate, 'currentMonthDays' => $currentMonthDays, 'currentMonth' => $currentMonth, 'currentYear' => $currentYear, 'years' => $years,'months' => $months]);
+    }
 }
+
+

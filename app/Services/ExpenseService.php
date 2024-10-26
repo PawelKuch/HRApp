@@ -5,11 +5,8 @@ namespace App\Services;
 use App\Models\Expense;
 use App\Models\User;
 use App\Repositories\ExpenseRepository;
-use App\Repositories\UserRepository;
 use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 

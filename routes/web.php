@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\UserMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -80,4 +81,44 @@ Route::get('usersWorktime', [\App\Http\Controllers\mainTestController::class, 'g
 Route::get('user-worktime/{userId}', [\App\Http\Controllers\mainTestController::class, 'getUserWorktimePage'])
     -> name('userWorktime')
     -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+
+Route::get('user-settings/{userId}', [\App\Http\Controllers\mainTestController::class, 'getUserSettingsPage'])
+    -> name('user.settings')
+    -> middleware(\App\Http\Middleware\UserMiddleware::class);
+
+Route::get('your-account/{userId}', [\App\Http\Controllers\mainTestController::class, 'getYourAccountPage'])
+    -> name('your.account')
+    -> middleware(UserMiddleware::class);
+
+Route::get('change-password/{userId}', [\App\Http\Controllers\mainTestController::class, 'getChangePasswordPage'])
+    -> name('change.password')
+    -> middleware(UserMiddleware::class);
+
+Route::post('change-password', [\App\Http\Controllers\mainTestController::class, 'changePassword'])
+    -> middleware(UserMiddleware::class);
+
+
+Route::get('change-email', [\App\Http\Controllers\mainTestController::class, 'getChangeEmailPage'])
+    -> name('change.email')
+    -> middleware(UserMiddleware::class );
+
+Route::post('change-email', [\App\Http\Controllers\mainTestController::class, 'changeEmail'])
+    -> middleware(UserMiddleware::class);
+
+Route::get('leaves', [\App\Http\Controllers\mainTestController::class, 'getLeavesPage'])
+    -> name('leaves')
+    -> middleware(UserMiddleware::class);
+
+Route::post('leaves', [\App\Http\Controllers\mainTestController::class, 'addLeave'])
+    -> middleware(UserMiddleware::class);
+
+Route::get('user-leaves', [\App\Http\Controllers\mainTestController::class, 'getUserLeavesPage'])
+    -> name('user.leaves')
+    -> middleware(\App\Http\Middleware\UserMiddleware::class);
+
+Route::post('user-leaves', [\App\Http\Controllers\mainTestController::class, 'addLeave'])
+    -> middleware(UserMiddleware::class);
+
+
+
 

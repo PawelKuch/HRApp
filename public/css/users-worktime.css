@@ -1,0 +1,24 @@
+#users-container{
+    border: 1px solid green;
+    width: 75%;
+    min-height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-tile {
+    border: 1px solid #2d3748;
+    border-radius: 15px;
+    padding: 10px;
+    width: 20%;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #2d3748;
+    color: #edf2f7;
+}
+
+
+.user-tile:hover {
+    background-color: #4a5568;
+}

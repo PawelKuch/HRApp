@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -76,6 +79,20 @@ class UserService {
     {
         $user = $this -> userRepository -> getUserByUserId($userId);
         $user -> is_blocked = false;
+        $user -> save();
+    }
+
+    public function changePassword($userId, $newPassword) : void
+    {
+        $user = $this->userRepository -> getUserByUserId($userId);
+        $user -> password = Hash::make($newPassword);
+        $user -> save();
+    }
+
+    public function changeEmail($userId, $newEmail) : void
+    {
+        $user = $this -> userRepository -> getUserByUserId($userId);
+        $user -> email = $newEmail;
         $user -> save();
     }
 }

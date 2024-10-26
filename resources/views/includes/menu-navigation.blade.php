@@ -22,20 +22,21 @@
                                 <div class="dropdown-content">
                                     <a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a>
                                     <a href="{{route('usersWorktime')}}">Users worktime</a>
-                                    <a href="#">Third option</a>
                                 </div>
                             </div>
                         </li>
                     @else
-                        <li><a href='{{route('worktime', ['userId' => Auth::user()-> userId, 'month' => \Carbon\Carbon::now() -> month, 'year' => \Carbon\Carbon::now() -> year]) }}'>Work time</a></li>
-                        <li><a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a></li>
+
+                            <li><a href='{{route('worktime', ['userId' => Auth::user()-> userId, 'month' => \Carbon\Carbon::now() -> month, 'year' => \Carbon\Carbon::now() -> year]) }}'>Work time</a></li>
+                            <li><a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}'>Expenses</a></li>
                     @endif
+                        <li><a href='{{route('user.leaves')}}'>User leaves</a></li>
                      <div class="dropdown">
                          <a href="#" class="dropBtn">{{Auth::user() -> name}}</a>
                          <div class="dropdown-content-user">
                              <a href="#">Your profile</a>
-                             <a href="#">Your settings</a>
-                             <a href="#">Your account</a>
+                             <a href="{{route('your.account', ['userId' => Auth::user() -> userId])}}">Your account</a>
+                             <a href='{{route('user.settings', ['userId' => Auth::user() -> userId])}}'>Your settings</a>
                              <a href="{{route('sign-out')}}">Sign out</a>
                          </div>
                      </div>

@@ -101,9 +101,7 @@
         if(monthSelect){
           monthSelect.addEventListener('change', function () {
               let userId = @json($userId).toString();
-              let selectedMonth = this.value;
               let [month, year] = this.value.split('-');
-
 
               window.location.href = '/work-time/' + encodeURIComponent(userId) + '?month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year);
           });

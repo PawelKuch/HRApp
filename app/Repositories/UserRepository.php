@@ -17,7 +17,7 @@ class UserRepository {
         return false;
     }
 
-    public function getUsers() : Collection
+    public function getAllUsers() : Collection
     {
         if($users = User::all()){
             return $users;

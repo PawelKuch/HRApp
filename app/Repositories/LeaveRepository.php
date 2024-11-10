@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Leave;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -18,6 +19,10 @@ class LeaveRepository {
         $leave -> delete();
     }
 
+    public function deleteAllLeaves() : void{
+        Leave::truncate();
+    }
+
     public function getAllLeaves() : Collection
     {
         return Leave::all();
@@ -31,9 +36,47 @@ class LeaveRepository {
         return Leave::where('user_id', $userId) -> get();
     }
 
-    public function getLeavesByIdOfUserAndOlderThanGivenDate($userId, $date) : Collection
+    public function getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($userId, $date) : Collection
     {
-        return Leave::where('user_id', $userId) ->
-            where('created_at' < $date) -> get();
+        return Leave::where('user_id', $userId)
+            -> where('to_date', '<=', $date) -> get()
+            -> where('leave_status', 'approved');
     }
+
+    public function getPendingLeavesByIdOfUser($userId) : Collection
+    {
+        $date = Carbon::now();
+        return Leave::where('leave_status', 'pending')
+            -> where('user_id', $userId)
+            -> where('from_date', '>', $date) -> get();
+
+        /*return DB::table('leaves')
+            -> join('users', 'users.id', '=', 'leaves.user_id')
+            -> where('leave_status', 'pending')
+            -> where('user_id', $userId)
+            -> where('from_date', '>', $date)
+            -> select('leaves.*', 'users.name as user_name') -> get();*/
+    }
+
+    public function getConfirmedIncomingLeavesByIdOfUser($userId) : Collection
+    {
+        $currentDate = Carbon::now();
+        return Leave::where('user_id', $userId)
+            -> where('leave_status', 'approved')
+            -> where('from_date', '>', $currentDate)
+            -> where('to_date', '>', $currentDate) -> get();
+    }
+
+    public function getLeavesHistoryByIdOfUser($userId) : Collection
+    {
+        $date = Carbon::now();
+        return Leave::where('user_id', $userId)
+            -> where('from_date', '<=', $date) -> get();
+    }
+
+    public function getLeaveById($id) : Leave
+    {
+        return Leave::where('id', $id) -> first();
+    }
+
 }

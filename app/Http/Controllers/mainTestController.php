@@ -8,6 +8,8 @@ use App\Services\LeaveService;
 use App\Services\UserService;
 use App\Services\WorkTimeService;
 use Carbon\Carbon;
+use http\Env\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,7 +85,7 @@ class mainTestController extends Controller
     }
 
     public function getUsers(): View{
-        $users = $this -> userService -> getUsers();
+        $users = $this -> userService -> getAllUsers();
         return view('users', ['users' => $users]);
     }
 
@@ -209,7 +211,7 @@ class mainTestController extends Controller
     public function getExpensesPage($userId) : View
     {
         $expensesForUser = $this -> expenseService -> getExpensesForUser($userId);
-        $users = $this -> userService -> getUsers();
+        $users = $this -> userService -> getAllUsers();
         $expenses = $this -> expenseService -> getAllExpenses();
         //dd($columns);
         return view('expenses', ['expensesForUser' => $expensesForUser,'expenses' => $expenses ,'users' => $users]);
@@ -256,7 +258,7 @@ class mainTestController extends Controller
 
     public function getUsersWorktimePage() : View
     {
-        return view('users-worktime', ['users' => $this -> userService -> getUsers()]);
+        return view('users-worktime', ['users' => $this -> userService -> getAllUsers()]);
     }
 
     public function getUserWorktimePage($userId, Request $request) : View
@@ -306,14 +308,15 @@ class mainTestController extends Controller
         return view('your-account', ['userId' => $userId]);
     }
 
-    public function getChangePasswordPage($userId) : View
+    public function getChangePasswordPage(Request $request) : View
     {
+        $userId = Auth::user() -> id;
         $user = $this -> userService -> getUserByUserId($userId);
         $email = $user -> email;
         return view('change-password', ['email' => $email]);
     }
 
-    public function changePassword($userId, Request $request) : RedirectResponse
+    public function changePassword(Request $request) : RedirectResponse
     {
         $data = $request -> validate(
             [
@@ -321,15 +324,17 @@ class mainTestController extends Controller
                 'new_password' => 'required | confirmed',
             ]);
 
+        $user = Auth::user();
         $currentPassword = $data['current_password'];
         $newPassword = $data['new_password'];
-        $passwordFromDB = Auth::user() -> password;
+        $passwordFromDB = $user -> password;
+        $userId = $user -> userId;
         if(!Hash::check($currentPassword, $passwordFromDB)) {
                 return redirect() -> route('change-password', ['userId' => $userId]) -> withErrors(['incorrectPassword' => 'Incorrect password. You cannot change the one!',
                     'incorrectNewPassword' => 'New password and confirm new password do not match.']);
         }
         $this -> userService -> changePassword($userId, $newPassword);
-        return redirect() -> route('change.password', ['userId' => $userId]);
+        return redirect() -> route('change.password', ['userId' => $userId]) -> with(['success' => 'Password has been changed!']);
     }
 
     public function getChangeEmailPage() : View
@@ -354,20 +359,40 @@ class mainTestController extends Controller
         return redirect() -> route('change.email');
     }
 
-    public function getLeavesPage() : View
+    public function getLeavesPage(Request $request) : View
     {
-        $leaves = $this -> leaveService -> getAllLeaves();
-        return view('leaves', ['leaves' => $leaves]);
+        $users = $this -> userService -> getAllUsers();
+        $allLeaves = $this -> leaveService -> getAllLeaves();
+        //$userPendingLeaves = $this -> leaveService -> getPendingLeavesByIdOfUser()
+
+        return view('leaves', ['leaves' => $allLeaves, 'users' => $users]);
+    }
+
+    public function getPendingLeavesForUserFromFetch(Request $request) : JsonResponse
+    {
+        $userId = $request -> input('userId');
+        $currentDate = Carbon::now();
+        $leavesForUser = $this -> leaveService -> getPendingLeavesByIdOfUser($userId, $currentDate);
+        return response() -> json($leavesForUser);
+    }
+
+    public function getApprovedAndIncomingLeavesForUserFromFetch(Request $request) : JsonResponse
+    {
+        $userId = $request -> input('userId');
+        $confirmedIncomingLeaves = $this -> leaveService -> getConfirmedIncomingLeavesByIdOfUser($userId);
+        return response() -> json($confirmedIncomingLeaves);
+    }
+
+    public function getLeavesHistoryFOrUserFromFetch(Request $request) : JsonResponse
+    {
+        $userId = $request -> input('userId');
+        $leavesHistory = $this -> leaveService -> getLeavesHistoryByIdOfUser($userId);
+        return response() -> json($leavesHistory);
     }
 
     public function addLeave(Request $request) : RedirectResponse
     {
 
-        return redirect() -> route('leaves');
-    }
-
-    public function getUserLeavesPage(Request $request) : View{
-        $currentDate = Carbon::now();
         $fromDateDay = $request -> input('from_date_day');
         $fromDateMonth = $request -> input('from_date_month');
         $fromDateYear = $request -> input('from_date_year');
@@ -381,6 +406,18 @@ class mainTestController extends Controller
 
         $user = Auth::user();
         $this -> leaveService ->createLeave($user, $fromDate, $toDate);
+
+        return redirect() -> route('user.leaves');
+    }
+
+    public function deleteAllLeaves() : RedirectResponse
+    {
+        $this -> leaveService -> deleteAllLeaves();
+        return redirect() -> route('user.leaves');
+    }
+
+    public function getUserLeavesPage() : View{
+        $currentDate = Carbon::now();
 
         $currentMonthDays = $this -> workTimeService -> getDaysArray($currentDate);
         $currentMonth = $currentDate -> month;
@@ -399,11 +436,27 @@ class mainTestController extends Controller
             $years[] = $i;
         }
 
-        $id = $user -> id;
-        $leaves = $this -> leaveService -> getLeavesByIdOfUserAndGivenDate($id, $currentDate); //tutaj zmienić, że nie porownuje z created_at a z from date i z to date
-        //$leaves = $this -> leaveService -> getLeavesByIdOfUser($id);
-        return view('user-leaves', ['leaves' => $leaves,'currentDate' => $currentDate, 'currentMonthDays' => $currentMonthDays, 'currentMonth' => $currentMonth, 'currentYear' => $currentYear, 'years' => $years,'months' => $months]);
+        $id = Auth::user() -> id;
+        $leavesHistory = $this -> leaveService -> getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($id, $currentDate);
+        $pendingLeaves = $this -> leaveService -> getPendingLeavesByIdOfUser($id, $currentDate);
+        return view('user-leaves', ['leavesHistory' => $leavesHistory, 'pendingLeaves' => $pendingLeaves, 'currentDate' => $currentDate, 'currentMonthDays' => $currentMonthDays, 'currentMonth' => $currentMonth, 'currentYear' => $currentYear, 'years' => $years,'months' => $months]);
     }
+
+    public function approveLeaveRequest(Request $request) : RedirectResponse
+    {
+        $leaveId = $request -> query('leaveId');
+        $this -> leaveService -> approveLeave($leaveId);
+        return redirect() -> route('leaves');
+    }
+
+    public function moveBackTheLeave(Request $request) : RedirectResponse
+    {
+        $leaveId = $request -> query('leaveId');
+        $this -> leaveService -> moveBackTheLeave($leaveId);
+        return redirect() -> route('leaves');
+    }
+
+
 }
 
 

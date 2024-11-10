@@ -12,6 +12,8 @@ Route::get('/controller', [\App\Http\Controllers\mainTestController::class, 'ind
 Route::get('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'getCreateUserForm'])
     ->middleware(\App\Http\Middleware\AdminMiddleware::class);
 
+Route::get('/', [\App\Http\Controllers\mainTestController::class, 'getMainPage']);
+
 Route::post('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'createUser'])
     ->name('create-user')
     ->middleware(\App\Http\Middleware\AdminMiddleware::class);
@@ -90,7 +92,7 @@ Route::get('your-account/{userId}', [\App\Http\Controllers\mainTestController::c
     -> name('your.account')
     -> middleware(UserMiddleware::class);
 
-Route::get('change-password/{userId}', [\App\Http\Controllers\mainTestController::class, 'getChangePasswordPage'])
+Route::get('change-password', [\App\Http\Controllers\mainTestController::class, 'getChangePasswordPage'])
     -> name('change.password')
     -> middleware(UserMiddleware::class);
 
@@ -109,16 +111,28 @@ Route::get('leaves', [\App\Http\Controllers\mainTestController::class, 'getLeave
     -> name('leaves')
     -> middleware(UserMiddleware::class);
 
-Route::post('leaves', [\App\Http\Controllers\mainTestController::class, 'addLeave'])
-    -> middleware(UserMiddleware::class);
+Route::post('get-pending-leaves-for-user', [\App\Http\Controllers\mainTestController::class, 'getPendingLeavesForUserFromFetch']);
+Route::post('get-approved-incoming-leaves-for-user', [\App\Http\Controllers\mainTestController::class, 'getApprovedAndIncomingLeavesForUserFromFetch']);
+Route::post('get-leaves-history-for-user', [\App\Http\Controllers\mainTestController::class, 'getLeavesHistoryForUserFromFetch']);
 
 Route::get('user-leaves', [\App\Http\Controllers\mainTestController::class, 'getUserLeavesPage'])
     -> name('user.leaves')
     -> middleware(\App\Http\Middleware\UserMiddleware::class);
 
+
 Route::post('user-leaves', [\App\Http\Controllers\mainTestController::class, 'addLeave'])
     -> middleware(UserMiddleware::class);
 
+Route::get('delete-all-leaves', [\App\Http\Controllers\mainTestController::class, 'deleteAllLeaves'])
+    -> name('delete.all.leaves');
+    //-> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
+Route::get('approve-leave-request', [\App\Http\Controllers\mainTestController::class, 'approveLeaveRequest'])
+    -> name('approve.leave.request')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
+
+Route::get('move-back-the-leave-request', [\App\Http\Controllers\mainTestController::class, 'moveBackTheLeave'])
+    -> name('move.back.the.leave.request')
+    -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
 

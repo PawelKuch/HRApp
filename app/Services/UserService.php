@@ -44,10 +44,10 @@ class UserService {
         return false;
     }
 
-    public function getUsers() : Collection
+    public function getAllUsers() : Collection
     {
         try{
-            return $this->userRepository -> getUsers();
+            return $this->userRepository -> getAllUsers();
         }catch (ModelNotFoundException $e){
             Log::error($e->getMessage());
             return collect();

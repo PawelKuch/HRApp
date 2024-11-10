@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Leave;
+use App\Models\User;
 use App\Repositories\LeaveRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -23,7 +24,7 @@ class LeaveService {
         $leave -> user() -> associate($user);
         $leave -> from_date = $fromDate;
         $leave -> to_date = $toDate;
-        $leave -> leave_status = false;
+        $leave -> leave_status = 'pending';
         $this -> leaveRepository -> saveLeave($leave);
     }
 
@@ -41,9 +42,48 @@ class LeaveService {
         return $this -> leaveRepository -> getLeavesByIdOfUser($userId);
     }
 
-    public function getLeavesByIdOfUserAndGivenDate($userId, $date) : Collection
+    public function deleteAllLeaves() : void
     {
-        return $this -> leaveRepository -> getLeavesByIdOfUserAndOlderThanGivenDate($userId, $date);
+        $this -> leaveRepository -> deleteAllLeaves();
     }
+
+    public function getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($userId, $date) : Collection
+    {
+        return $this -> leaveRepository -> getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($userId, $date);
+    }
+
+    public function getPendingLeavesByIdOfUser($userId, $currentDate) : Collection
+    {
+        return $this -> leaveRepository -> getPendingLeavesByIdOfUser($userId, $currentDate);
+    }
+
+    public function getConfirmedIncomingLeavesByIdOfUser($idOfUser) : Collection
+    {
+        return $this -> leaveRepository -> getConfirmedIncomingLeavesByIdOfUser($idOfUser);
+    }
+
+    public function getLeavesHistoryByIdOfUser($idOfUser) : Collection
+    {
+        return $this -> leaveRepository -> getLeavesHistoryByIdOfUser($idOfUser);
+    }
+    public function getLeaveById($id) : Leave
+    {
+        return $this -> leaveRepository -> getLeaveById($id);
+    }
+
+    public function approveLeave($leaveId) : void
+    {
+        $leave = $this -> leaveRepository -> getLeaveById($leaveId);
+        $leave -> leave_status = 'approved';
+        $leave -> save();
+    }
+
+    public function moveBackTheLeave($leaveId) : void
+    {
+        $leave = $this -> leaveRepository -> getLeaveById($leaveId);
+        $leave -> leave_status = 'pending';
+        $leave -> save();
+    }
+
 
 }

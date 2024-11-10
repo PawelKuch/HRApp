@@ -20,3 +20,56 @@
     height: 30px;
     margin: 1px;
 }
+
+.user {
+    cursor: pointer;
+    border-radius: 15px;
+    border: 1px solid black;
+    background-color: lightslategray;
+    width: 300px;
+    text-align: center;
+    margin: 10px;
+}
+
+.user:hover {
+    background-color: #2d3748;
+    color: white;
+}
+
+.active_tile {
+    background-color: #007bff;
+}
+
+.pending_leaves {
+    border: 1px solid black;
+    width: 100%;
+
+}
+
+.leaves_category_container {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.category_tile:hover {
+    background-color: #2d3748;
+    color: white;
+    cursor: pointer;
+}
+
+.category_tile {
+    border: 1px solid black;
+    width: 25%;
+    margin: 3px 5px 3px 5px;
+    padding-bottom:3px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}

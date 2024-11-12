@@ -24,3 +24,7 @@
 #leaves-history-table {
     margin-bottom: 30px;
 }
+
+.input-group-text {
+    width: 50px;
+}

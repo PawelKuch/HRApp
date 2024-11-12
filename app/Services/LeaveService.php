@@ -47,14 +47,10 @@ class LeaveService {
         $this -> leaveRepository -> deleteAllLeaves();
     }
 
-    public function getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($userId, $date) : Collection
+    public function getPendingLeavesByIdOfUser($userId) : Collection
     {
-        return $this -> leaveRepository -> getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($userId, $date);
-    }
 
-    public function getPendingLeavesByIdOfUser($userId, $currentDate) : Collection
-    {
-        return $this -> leaveRepository -> getPendingLeavesByIdOfUser($userId, $currentDate);
+        return $this -> leaveRepository -> getPendingLeavesByIdOfUser($userId);
     }
 
     public function getConfirmedIncomingLeavesByIdOfUser($idOfUser) : Collection

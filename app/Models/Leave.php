@@ -22,4 +22,9 @@ class Leave extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $casts = [
+        'from_date' => 'date',
+        'to_date' => 'date',
+    ];
 }

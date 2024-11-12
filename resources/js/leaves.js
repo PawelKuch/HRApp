@@ -38,18 +38,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 pendingLeavesTile.classList.remove('active_tile');
                 approvedIncomingLeavesTile.classList.remove('active_tile');
             });
-
-
-
             tableBody.innerHTML = '';
-
-
         });
-
     });
 });
 
 function getLeaves(url, tableBody, userId ){
+    let moveBackLeaveRequestDiv = document.getElementById('move_back_leave_request');
+    let moveBackLeaveRequestUrl = moveBackLeaveRequestDiv.dataset.moveBackLeaveUrl;
+
+
+    let approveLeaveRequestDiv = document.getElementById('approve_leave_request');
+    let approveLeaveRequestUrl = approveLeaveRequestDiv.dataset.approveLeaveUrl;
+
     fetch(url, {
         method: 'POST',
         headers: {
@@ -71,18 +72,18 @@ function getLeaves(url, tableBody, userId ){
                     row.appendChild(idCell);
 
                     const fromDateCell = document.createElement('td');
-                    fromDateCell.textContent = request.from_date;
+                    fromDateCell.textContent = dayjs(request.from_date).format('DD-MM-YYYY');
                     row.appendChild(fromDateCell);
 
                     const toDateCell = document.createElement('td');
-                    toDateCell.textContent = request.to_date;
+                    toDateCell.textContent = dayjs(request.to_date).format('DD-MM-YYYY');
                     row.appendChild(toDateCell);
 
                     const actionCell = document.createElement('td');
                     if(url === 'get-pending-leaves-for-user'){
-                        actionCell.innerHTML = `<a href="{{route('approve.leave.request', ['leaveId' => ''])}}${request.id}"><i class="bi bi-check-square text-success"></i></a>`;
+                        actionCell.innerHTML = `<a href="${approveLeaveRequestUrl}${request.id}"><i class="bi bi-check-square text-success"></i></a>`;
                     }else if(url === 'get-approved-incoming-leaves-for-user'){
-                        actionCell.innerHTML = `<a href="{{route('move.back.the.leave.request', ['leaveId' => ''])}}${request.id}"><i class="bi bi-arrow-left"></i></a>`;
+                        actionCell.innerHTML = `<a href="${moveBackLeaveRequestUrl}${request.id}"><i class="bi bi-arrow-left"></i></a>`;
                     }else{
                         actionCell.innerHTML = '-';
                     }

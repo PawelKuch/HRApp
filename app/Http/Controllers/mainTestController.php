@@ -363,7 +363,6 @@ class mainTestController extends Controller
     {
         $users = $this -> userService -> getAllUsers();
         $allLeaves = $this -> leaveService -> getAllLeaves();
-        //$userPendingLeaves = $this -> leaveService -> getPendingLeavesByIdOfUser()
 
         return view('leaves', ['leaves' => $allLeaves, 'users' => $users]);
     }
@@ -383,7 +382,7 @@ class mainTestController extends Controller
         return response() -> json($confirmedIncomingLeaves);
     }
 
-    public function getLeavesHistoryFOrUserFromFetch(Request $request) : JsonResponse
+    public function getLeavesHistoryForUserFromFetch(Request $request) : JsonResponse
     {
         $userId = $request -> input('userId');
         $leavesHistory = $this -> leaveService -> getLeavesHistoryByIdOfUser($userId);
@@ -392,17 +391,11 @@ class mainTestController extends Controller
 
     public function addLeave(Request $request) : RedirectResponse
     {
+        $fromDateString = $request -> input('from_date');
+        $fromDate = Carbon::createFromFormat('d-m-Y', $fromDateString);
 
-        $fromDateDay = $request -> input('from_date_day');
-        $fromDateMonth = $request -> input('from_date_month');
-        $fromDateYear = $request -> input('from_date_year');
-
-        $toDateDay = $request -> input('to_date_day');
-        $toDateMonth = $request -> input('to_date_month');
-        $toDateYear = $request -> input('to_date_year');
-
-        $fromDate = Carbon::createFromDate($fromDateYear, $fromDateMonth,$fromDateDay);
-        $toDate = Carbon::createFromDate($toDateYear, $toDateMonth, $toDateDay);
+        $toDateString = $request -> input('to_date');
+        $toDate = Carbon::createFromFormat('d-m-Y', $toDateString);
 
         $user = Auth::user();
         $this -> leaveService ->createLeave($user, $fromDate, $toDate);
@@ -419,27 +412,11 @@ class mainTestController extends Controller
     public function getUserLeavesPage() : View{
         $currentDate = Carbon::now();
 
-        $currentMonthDays = $this -> workTimeService -> getDaysArray($currentDate);
-        $currentMonth = $currentDate -> month;
-        $currentYear = $currentDate -> year;
-
-        $months = [];
-        for($i = 1; $i < 13; $i++)
-        {
-            $months[] = Carbon::createFromDate(2024, $i, 1);
-        }
-
-        $years = [];
-        $startYear = 2000;
-        $endYear = $currentYear + 5;
-        for($i = $startYear; $i <= $endYear; $i++){
-            $years[] = $i;
-        }
-
         $id = Auth::user() -> id;
-        $leavesHistory = $this -> leaveService -> getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($id, $currentDate);
-        $pendingLeaves = $this -> leaveService -> getPendingLeavesByIdOfUser($id, $currentDate);
-        return view('user-leaves', ['leavesHistory' => $leavesHistory, 'pendingLeaves' => $pendingLeaves, 'currentDate' => $currentDate, 'currentMonthDays' => $currentMonthDays, 'currentMonth' => $currentMonth, 'currentYear' => $currentYear, 'years' => $years,'months' => $months]);
+        $confirmedIncomingLeaves = $this -> leaveService -> getConfirmedIncomingLeavesByIdOfUser($id);
+        $pendingLeaves = $this -> leaveService -> getPendingLeavesByIdOfUser($id);
+        $leavesHistory = $this -> leaveService -> getLeavesHistoryByIdOfUser($id);
+        return view('user-leaves', ['confirmedIncomingLeaves' => $confirmedIncomingLeaves, 'pendingLeaves' => $pendingLeaves, 'leavesHistory' => $leavesHistory, 'currentDate' => $currentDate]);
     }
 
     public function approveLeaveRequest(Request $request) : RedirectResponse

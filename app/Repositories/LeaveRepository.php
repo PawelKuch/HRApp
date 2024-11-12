@@ -36,26 +36,12 @@ class LeaveRepository {
         return Leave::where('user_id', $userId) -> get();
     }
 
-    public function getConfirmedLeavesByIdOfUserAndLessAndEqualGivenDate($userId, $date) : Collection
-    {
-        return Leave::where('user_id', $userId)
-            -> where('to_date', '<=', $date) -> get()
-            -> where('leave_status', 'approved');
-    }
-
     public function getPendingLeavesByIdOfUser($userId) : Collection
     {
         $date = Carbon::now();
         return Leave::where('leave_status', 'pending')
             -> where('user_id', $userId)
             -> where('from_date', '>', $date) -> get();
-
-        /*return DB::table('leaves')
-            -> join('users', 'users.id', '=', 'leaves.user_id')
-            -> where('leave_status', 'pending')
-            -> where('user_id', $userId)
-            -> where('from_date', '>', $date)
-            -> select('leaves.*', 'users.name as user_name') -> get();*/
     }
 
     public function getConfirmedIncomingLeavesByIdOfUser($userId) : Collection

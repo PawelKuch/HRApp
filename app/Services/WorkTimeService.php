@@ -45,19 +45,11 @@ class WorkTimeService {
         }
     }
 
-    public function calculateHoursAmount($startHourInput, $startMinuteInput, $endHourInput, $endMinuteInput) : string
+
+    public function calculateHoursAmount($startDateInput, $endDateInput) : string
     {
-        $startHour = (int) explode(':', $startHourInput)[0];
-        $startMinute = (int) explode(':', $startMinuteInput)[1];
-        $endHour = (int) explode(':',$endHourInput)[0];
-        $endMinute = (int) explode(':', $endMinuteInput)[1];
-
-        $startDate = Carbon::createFromTime($startHour, $startMinute);
-        $endDate = Carbon::createFromTime($endHour, $endMinute);
-        $minutes = $startDate -> diffInMinutes($endDate);
-
-        $hoursAmount = floor($minutes / 60);
-        $minutesAmount = $minutes % 60;
+        $hoursAmount = $startDateInput -> diffInHours($endDateInput);
+        $minutesAmount = $startDateInput -> diffInMinutes($endDateInput) % 60;
 
         return Carbon::createFromTime($hoursAmount, $minutesAmount) -> format('H:i');
     }

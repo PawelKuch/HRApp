@@ -26,7 +26,6 @@
             <th>From</th>
             <th>To</th>
             <th>Status</th>
-            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -36,7 +35,6 @@
                 <td>{{$leave -> from_date}}</td>
                 <td>{{$leave -> to_date}}</td>
                 <td>{{$leave -> leave_status}}</td>
-                <td>cancel your request | edit your request</td>
             </tr>
         @endforeach
         </tbody>
@@ -53,6 +51,7 @@
                 <th>From</th>
                 <th>To</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -62,6 +61,7 @@
                 <td>{{$leave -> from_date -> format("d-m-Y")}}</td>
                 <td>{{$leave -> to_date -> format("d-m-Y")}}</td>
                 <td>{{$leave -> leave_status}}</td>
+                <td><a href="{{route('cancel.leave.request', ['leaveId' => $leave -> leave_id])}}">Cancel</a> || Edit </td>
             </tr>
         @endforeach
         </tbody>

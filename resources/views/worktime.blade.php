@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-
+    @vite('resources/js/workTime.js')
     <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
     <link rel="stylesheet" href="{{asset('css/worktime.css')}}">
 
@@ -15,16 +15,6 @@
 <body>
 @include('includes.menu-navigation')
 
-<input type="text" id="datetimepicker" placeholder="pick a time">
-
-<script>
-    flatpickr("#datetimepicker", {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i", // Format z datą i godziną
-        time_24hr: true           // Ustawienie 24-godzinnego formatu
-    });
-</script>
 
 <div class="container mt-3">
     <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> subMonth() ->  month,
@@ -55,28 +45,8 @@
                 <td>
                     <form action='{{route('calculate-work-time', ['userId' => $userId])}}' method="post">
                         @csrf
-                        <select name="startHour">
-                            @foreach($hours as $hour)
-                                <option value="{{$hour}}">{{$hour}}</option>
-                            @endforeach
-                        </select>
-                        <select name="startMinute">
-                            @foreach($minutes as $minute)
-                                <option value="{{$minute}}">{{$minute}}</option>
-                            @endforeach
-                        </select>
-                        <span> -- </span>
-                        <select name="endHour">
-                            @foreach($hours as $hour)
-                                <option value="{{$hour}}">{{$hour}}</option>
-                            @endforeach
-                        </select>
-                        <select name="endMinute">
-                            @foreach($minutes as $minute)
-                                <option value="{{$minute}}">{{$minute}}</option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" value="{{$day}}" name="date">
+                        <input id="start_time" type="text" name="start_time" value="start time" placeholder="H:i">
+                        <input id="end_time" type="text" name="end_time" value="end time" placeholder="H:i">
                         <button class="btn btn-outline-dark">Confirm</button>
                     </form>
                 </td>

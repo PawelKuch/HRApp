@@ -181,19 +181,17 @@ class mainTestController extends Controller
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
     {
-        $startHour = $request -> input('startHour', 0);
-        $startMinute = $request -> input('startMinute', 0);
-        $endHour = $request -> input('endHour', 0);
-        $endMinute = $request -> input('endMinute', 0);
+        $startTimeString = $request -> input('start_time');
+        $startTime = Carbon::createFromFormat('H:i', $startTimeString);
+
+        $endTimeString = $request -> input('end_time');
+        $endTime = Carbon::createFromFormat('H:i', $endTimeString);
         $workTimeDate = $request -> input('date');
 
-        $startDate = $this -> workTimeService -> getStartDate($startHour, $startMinute);
-        $endDate = $this -> workTimeService -> getEndDate($endHour, $endMinute);
-        $hoursAmountTime = $this -> workTimeService -> calculateHoursAmount($startHour, $startMinute, $endHour, $endMinute);
-
+        $hoursAmountTime = $this -> workTimeService -> calculateHoursAmount($startTime, $endTime);
 
         $user = $this -> userService -> getUserByUserId($userId);
-        $this -> workTimeService -> createWorkTime($user, $startDate, $endDate, $hoursAmountTime, $workTimeDate);
+        $this -> workTimeService -> createWorkTime($user, $startTime, $endTime, $hoursAmountTime, $workTimeDate);
 
         return redirect() -> route('worktime', ['userId' => $userId]);
     }
@@ -433,6 +431,12 @@ class mainTestController extends Controller
         return redirect() -> route('leaves');
     }
 
+    public function cancelLeaveRequest(Request $request) : RedirectResponse
+    {
+        $leaveId = $request -> query('leaveId');
+        $this -> leaveService -> deleteLeave($leaveId);
+        return redirect() -> route('user.leaves');
+    }
 
 }
 

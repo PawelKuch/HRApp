@@ -135,4 +135,7 @@ Route::get('move-back-the-leave-request', [\App\Http\Controllers\mainTestControl
     -> name('move.back.the.leave.request')
     -> middleware(\App\Http\Middleware\AdminMiddleware::class);
 
+Route::get('cancel-leave-request', [\App\Http\Controllers\mainTestController::class, 'cancelLeaveRequest'])
+    -> name('cancel.leave.request')
+    -> middleware(UserMiddleware::class);
 

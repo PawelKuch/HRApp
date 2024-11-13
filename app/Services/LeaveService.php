@@ -81,5 +81,7 @@ class LeaveService {
         $leave -> save();
     }
 
-
+    public function deleteLeave($leaveId) : void {
+        $this -> leaveRepository -> deleteLeave($leaveId);
+    }
 }

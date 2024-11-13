@@ -14,8 +14,9 @@ class LeaveRepository {
         $leave -> save();
     }
 
-    public function deleteLeave(Leave $leave)
+    public function deleteLeave($leaveId)
     {
+        $leave = $this -> getLeaveByLeaveId($leaveId);
         $leave -> delete();
     }
 
@@ -56,7 +57,8 @@ class LeaveRepository {
     public function getLeavesHistoryByIdOfUser($userId) : Collection
     {
         $date = Carbon::now();
-        return Leave::where('user_id', $userId)
+        return Leave::where('leave_status', 'approved')
+            -> where('user_id', $userId)
             -> where('from_date', '<=', $date) -> get();
     }
 

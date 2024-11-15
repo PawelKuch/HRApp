@@ -31,7 +31,7 @@
                         @if($user -> role == 'admin')
                             -
                         @else
-                            <a href='delete-user/{{$user->userId}}'><i class="bi bi-trash text-dark"></i></a>
+                            <a href='delete-user/{{$user->userId}}'><i class="bi bi-trash text-dark"> </i></a>
                             <a href="{{ route('edit-user', ['userId' => $user -> userId]) }}"><i class="bi bi-pencil text-dark"></i></a>
                             @if($user -> is_blocked == 1)
                                 <a href="unblock-user/{{$user -> userId}}"><i class="bi bi-unlock text-success"></i></a>

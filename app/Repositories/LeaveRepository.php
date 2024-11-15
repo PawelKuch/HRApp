@@ -67,4 +67,11 @@ class LeaveRepository {
         return Leave::where('id', $id) -> first();
     }
 
+    public function editLeave($leaveId, $fromDate, $toDate) : void
+    {
+        $leave = $this -> getLeaveByLeaveId($leaveId);
+        $leave -> from_date = $fromDate;
+        $leave -> to_date = $toDate;
+        $leave -> save();
+    }
 }

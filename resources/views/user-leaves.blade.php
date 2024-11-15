@@ -17,6 +17,7 @@
 @include('includes.menu-navigation')
 <div class="container">
     <a href="#" data-bs-toggle="modal" data-bs-target="#addLeaveRequestModal"><button class="btn btn-outline-primary mt-3">Create leave request</button></a>
+
     @if($leavesHistory -> isNotEmpty())
     <table id="leaves-history-table" class="table table-bordered">
         <thead>
@@ -61,7 +62,9 @@
                 <td>{{$leave -> from_date -> format("d-m-Y")}}</td>
                 <td>{{$leave -> to_date -> format("d-m-Y")}}</td>
                 <td>{{$leave -> leave_status}}</td>
-                <td><a href="{{route('cancel.leave.request', ['leaveId' => $leave -> leave_id])}}">Cancel</a> || Edit </td>
+                <td><a href="{{route('cancel.leave.request', ['leaveId' => $leave -> leave_id])}}">Cancel</a> ||
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#editLeaveRequestModal">Edit</a>
+                </td>
             </tr>
         @endforeach
         </tbody>
@@ -76,6 +79,7 @@
                 <th>Request date</th>
                 <th>From date</th>
                 <th>To date</th>
+                <th>Leave status</th>
             </tr>
         </thead>
         <tbody>
@@ -84,6 +88,7 @@
                     <td>{{$leave -> created_at -> format('d-m-Y')}}</td>
                     <td>{{$leave -> from_date -> format('d-m-Y')}}</td>
                     <td>{{$leave -> to_date -> format('d-m-Y')}}</td>
+                    <td>{{$leave -> leave_status}}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -118,6 +123,41 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editLeaveRequestModalContainer">
+    <div class="modal fade" id="editLeaveRequestModal" tabindex="-1" aria-labelledby="editLeaveRequestModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div id="modal-title-div">
+                        <h1 class="modal-title fs-5" id="editLeaveRequestModalLabel">Edit leave request</h1>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+
+                    </div>
+                    <form method="post" action="{{route('edit.leave.request')}}">
+                        @csrf
+                        <div class="input-group from-date">
+                            <span class="input-group-text form-control mb-3">From</span>
+                            <input class="form-control mb-3" type="text" id="from_date_datepicker" name="from_date" value="dd-mm-yyyy">
+                        </div>
+                        <div class="input-group to-date">
+                            <span class="input-group-text form-control mb-3">To</span>
+                            <input class="form-control mb-3" type="text" id="to_date_picker" name="to_date" value="dd-mm-yyyy">
+                        </div>
+                        <button class="btn btn-dark" type="submit">Update</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close </button>
                 </div>
             </div>
         </div>

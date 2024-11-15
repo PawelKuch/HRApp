@@ -84,4 +84,9 @@ class LeaveService {
     public function deleteLeave($leaveId) : void {
         $this -> leaveRepository -> deleteLeave($leaveId);
     }
+
+    public function editLeaveRequest($leaveId, $fromDate, $toDate) : void
+    {
+        $this -> leaveRepository -> editLeave($leaveId, $fromDate, $toDate);
+    }
 }

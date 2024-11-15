@@ -438,6 +438,19 @@ class mainTestController extends Controller
         return redirect() -> route('user.leaves');
     }
 
+    public function editLeaveRequest(Request $request) : RedirectResponse
+    {
+        $leaveId = $request -> query('leaveId');
+        $fromDateString = $request -> input('from_date');
+        $fromDate = Carbon::createFromFormat('d-m-Y', $fromDateString);
+
+        $toDateString = $request -> input('to_date');
+        $toDate = Carbon::createFromFormat('d-m-Y', $toDateString);
+
+        $this -> leaveService -> editLeaveRequest($leaveId, $fromDate, $toDate);
+        return redirect() -> route('user.leaves');
+    }
+
 }
 
 

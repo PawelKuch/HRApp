@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-
 class UserRepository {
 
     public function saveUser($user) : bool

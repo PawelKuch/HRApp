@@ -5,7 +5,7 @@
 <div id="navi-style" class="navi-style">
     <header class="navigation">
         <div id="imgLogo">
-            <a href="{{route('main-page')}}" class="logo">HR APP
+            <a href="{{route('main-page')}}" class="logo">XAViER
                 <img width="40px" height="40px" src="{{asset('img/logotypelogo.png')}}" alt="logotype png"></a>
         </div>
         <nav>

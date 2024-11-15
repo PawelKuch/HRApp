@@ -139,3 +139,7 @@ Route::get('cancel-leave-request', [\App\Http\Controllers\mainTestController::cl
     -> name('cancel.leave.request')
     -> middleware(UserMiddleware::class);
 
+Route::post('edit.leave.request', [\App\Http\Controllers\mainTestController::class, 'editLeaveRequest'])
+    -> name('edit.leave.request')
+    -> middleware(UserMiddleware::class);
+

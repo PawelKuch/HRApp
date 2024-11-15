@@ -72,7 +72,6 @@ class UserService {
         }else {
             Log::warning("User Service: User not found: $userId");
         }
-
     }
 
     public function unblockUser($userId) : void

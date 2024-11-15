@@ -62,6 +62,7 @@ class LeaveService {
     {
         return $this -> leaveRepository -> getLeavesHistoryByIdOfUser($idOfUser);
     }
+
     public function getLeaveById($id) : Leave
     {
         return $this -> leaveRepository -> getLeaveById($id);

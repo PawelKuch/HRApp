@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
+
 class LeaveRepository {
 
     public function saveLeave(Leave $leave) : void

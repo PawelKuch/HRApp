@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         if(DB::table('users')->count() == 0){

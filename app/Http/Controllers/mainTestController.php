@@ -450,7 +450,6 @@ class mainTestController extends Controller
         $this -> leaveService -> editLeaveRequest($leaveId, $fromDate, $toDate);
         return redirect() -> route('user.leaves');
     }
-
 }
 
 

@@ -176,7 +176,7 @@ class mainTestController extends Controller
 
         $previousMonths = $this -> workTimeService -> getMonthsRange($currentMonth);
 
-        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>$workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname]);
+        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>  $workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
@@ -186,12 +186,11 @@ class mainTestController extends Controller
 
         $endTimeString = $request -> input('end_time');
         $endTime = Carbon::createFromFormat('H:i', $endTimeString);
-        $workTimeDate = $request -> input('date');
-
+        //$workTimeDate = $request -> input('date');
         $hoursAmountTime = $this -> workTimeService -> calculateHoursAmount($startTime, $endTime);
 
         $user = $this -> userService -> getUserByUserId($userId);
-        $this -> workTimeService -> createWorkTime($user, $startTime, $endTime, $hoursAmountTime, $workTimeDate);
+        $this -> workTimeService -> createWorkTime($user, $startTime, $endTime, $hoursAmountTime, Carbon::now());
 
         return redirect() -> route('worktime', ['userId' => $userId]);
     }
@@ -401,6 +400,10 @@ class mainTestController extends Controller
         return redirect() -> route('user.leaves');
     }
 
+    public function editLeave(Request $request)
+    {
+
+    }
     public function deleteAllLeaves() : RedirectResponse
     {
         $this -> leaveService -> deleteAllLeaves();

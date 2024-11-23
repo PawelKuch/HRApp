@@ -63,9 +63,41 @@
                 <td>{{$leave -> to_date -> format("d-m-Y")}}</td>
                 <td>{{$leave -> leave_status}}</td>
                 <td><a href="{{route('cancel.leave.request', ['leaveId' => $leave -> leave_id])}}">Cancel</a> ||
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#editLeaveRequestModal">Edit</a>
+                    <a href="#" class="editBtn" data-bs-toggle="modal" data-bs-target="#editLeaveRequestModal_{{$leave -> leave_id}}" data-leaveId="{{$leave -> leave_id}}">Edit</a>
                 </td>
             </tr>
+            <div class="modal fade" id="editLeaveRequestModal_{{$leave -> leave_id}}" tabindex="-1" aria-labelledby="editLeaveRequestModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div id="modal-title-div">
+                                <h1 class="modal-title fs-5" id="editLeaveRequestModalLabel">Edit leave request</h1>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+
+                            </div>
+                            <form method="post" action="{{route('edit.leave.request', ['leaveId' => $leave -> leave_id])}}">
+                                @csrf
+                                <div class="input-group from-date">
+                                    <span class="input-group-text form-control mb-3">From</span>
+                                    <input class="form-control mb-3" type="text" id="from_date_datepicker" name="from_date" value="dd-mm-yyyy">
+                                </div>
+                                <div class="input-group to-date">
+                                    <span class="input-group-text form-control mb-3">To</span>
+                                    <input class="form-control mb-3" type="text" id="to_date_picker" name="to_date" value="dd-mm-yyyy">
+                                </div>
+                                <button class="btn btn-dark" type="submit">Update</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endforeach
         </tbody>
     </table>
@@ -130,42 +162,12 @@
 </div>
 
 <div id="editLeaveRequestModalContainer">
-    <div class="modal fade" id="editLeaveRequestModal" tabindex="-1" aria-labelledby="editLeaveRequestModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div id="modal-title-div">
-                        <h1 class="modal-title fs-5" id="editLeaveRequestModalLabel">Edit leave request</h1>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div>
 
-                    </div>
-                    <form method="post" action="{{route('edit.leave.request')}}">
-                        @csrf
-                        <div class="input-group from-date">
-                            <span class="input-group-text form-control mb-3">From</span>
-                            <input class="form-control mb-3" type="text" id="from_date_datepicker" name="from_date" value="dd-mm-yyyy">
-                        </div>
-                        <div class="input-group to-date">
-                            <span class="input-group-text form-control mb-3">To</span>
-                            <input class="form-control mb-3" type="text" id="to_date_picker" name="to_date" value="dd-mm-yyyy">
-                        </div>
-                        <button class="btn btn-dark" type="submit">Update</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close </button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
 
 </body>
 </html>

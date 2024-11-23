@@ -41,7 +41,6 @@
                         </tr>
                     </thead>
                     <tbody id="body_pending_leaves_table">
-
                     </tbody>
                 </table>
             </div>

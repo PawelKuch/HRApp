@@ -118,7 +118,7 @@
             @foreach($confirmedIncomingLeaves as $leave)
                 <tr>
                     <td>{{$leave -> created_at -> format('d-m-Y')}}</td>
-                    <td>{{$leave -> from_date -> format('d-m-Y')}}</td>
+                    <td>{{$leave -> from_date}}</td>
                     <td>{{$leave -> to_date -> format('d-m-Y')}}</td>
                     <td>{{$leave -> leave_status}}</td>
                 </tr>

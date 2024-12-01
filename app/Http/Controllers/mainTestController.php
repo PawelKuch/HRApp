@@ -186,11 +186,13 @@ class mainTestController extends Controller
 
         $endTimeString = $request -> input('end_time');
         $endTime = Carbon::createFromFormat('H:i', $endTimeString);
-        //$workTimeDate = $request -> input('date');
         $hoursAmountTime = $this -> workTimeService -> calculateHoursAmount($startTime, $endTime);
 
+        $worktimeDate = $request -> input('worktime_date');
+
+
         $user = $this -> userService -> getUserByUserId($userId);
-        $this -> workTimeService -> createWorkTime($user, $startTime, $endTime, $hoursAmountTime, Carbon::now());
+        $this -> workTimeService -> createWorkTime($user, $startTime, $endTime, $hoursAmountTime, $worktimeDate);
 
         return redirect() -> route('worktime', ['userId' => $userId]);
     }

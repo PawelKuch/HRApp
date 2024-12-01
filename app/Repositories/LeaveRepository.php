@@ -75,5 +75,4 @@ class LeaveRepository {
         $leave -> to_date = $toDate;
         $leave -> save();
     }
-
 }

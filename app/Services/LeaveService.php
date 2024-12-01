@@ -90,4 +90,5 @@ class LeaveService {
     {
         $this -> leaveRepository -> editLeave($leaveId, $fromDate, $toDate);
     }
+
 }

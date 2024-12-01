@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @mixin \Illuminate\Database\Query\Builder
  */
 
-
 class Expense extends Authenticatable
 {
     use HasFactory;

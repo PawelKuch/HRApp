@@ -43,12 +43,16 @@
             <tr>
                 <td>{{$day->format('D d M Y')}}</td>
                 <td>
-                    <form action='{{route('calculate-work-time', ['userId' => $userId])}}' method="post">
+                    <div data-worktime-day="{{$day -> format('d-m-Y')}}" class="worktime-div" id="worktime-div-{{$day}}">
+                        <form id="worktime-form-{{$day -> format('d-m-Y')}}" action="{{ route('calculate-work-time', ['userId' => $userId]) }}" method="post">
+
                         @csrf
-                        <input id="start_time" type="text" name="start_time" value="start time" placeholder="H:i">
-                        <input id="end_time" type="text" name="end_time" value="end time" placeholder="H:i">
-                        <button class="btn btn-outline-dark">Confirm</button>
-                    </form>
+                            <input id="start_time" type="text" name="start_time" value="start time" placeholder="H:i">
+                            <input id="end_time" type="text" name="end_time" value="end time" placeholder="H:i">
+                            <input name="worktime_date" type="hidden" value="{{ $day }}">
+                            <button class="btn btn-outline-dark">Confirm</button>
+                        </form>
+                    </div>
                 </td>
                 <td>
                     @foreach($workTimes as $workTime)
@@ -61,7 +65,7 @@
                 <td>
                     @foreach($workTimes as $workTime)
                         @if($day -> eq($workTime -> date))
-                            {{$workTime -> hoursAmount}}
+                            <div id="hoursAmountDiv-{{$day -> format('d-m-Y')}}">{{$workTime -> hoursAmount}}</div>
                         @endif
                     @endforeach
                 </td>

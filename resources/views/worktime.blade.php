@@ -18,7 +18,7 @@
 
 <div class="container mt-3">
     <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> subMonth() ->  month,
-            'year' => $currentMonth -> year, 'action' => 'prev'])}}"><i class="bi bi-arrow-left"></i></a>
+            'year' => $currentMonth -> year, 'action' => 'prev'])}}" class="text-dark"><i class="bi bi-arrow-left"></i></a>
 
     <select id="month">
         @foreach($previousMonths as $previousMonth)
@@ -27,7 +27,7 @@
     </select>
 
     <a href="{{route('worktime', ['userId' => $userId, 'month' => $currentMonth -> copy() -> addMonth() -> month,
-            'year' => $currentMonth -> year, 'action' => 'next'])}}"><i class="bi bi-arrow-right"></i></a>
+            'year' => $currentMonth -> year, 'action' => 'next'])}}" class="text-dark"><i class="bi bi-arrow-right"></i></a>
 
     <table class="table">
         <thead>
@@ -47,10 +47,12 @@
                         <form id="worktime-form-{{$day -> format('d-m-Y')}}" action="{{ route('calculate-work-time', ['userId' => $userId]) }}" method="post">
 
                         @csrf
-                            <input id="start_time" type="text" name="start_time" value="start time" placeholder="H:i">
-                            <input id="end_time" type="text" name="end_time" value="end time" placeholder="H:i">
-                            <input name="worktime_date" type="hidden" value="{{ $day }}">
-                            <button class="btn btn-outline-dark">Confirm</button>
+                            <div class="input-group d-flex flex-row">
+                                <input class="form-control mb-3 mx-3" id="start_time" type="text" name="start_time" value="start time" placeholder="start time">
+                                <input class="form-control mb-3 mx-3" id="end_time" type="text" name="end_time" value="end time" placeholder="end time">
+                                <input name="worktime_date" type="hidden" value="{{ $day }}">
+                            <button class="btn btn-dark form-control mb-3">Confirm</button>
+                            </div>
                         </form>
                     </div>
                 </td>
@@ -72,8 +74,8 @@
             </tr>
             @endforeach
             <tr class="separator">
-                <td colspan="3" >Total hours</td>
-                <td> {{$totalHours}}</td>
+                <td colspan="3" class="bg-light">Total hours</td>
+                <td class="bg-light"> {{$totalHours}}</td>
             </tr>
         </tbody>
     </table>
@@ -99,7 +101,7 @@
         }
     };
 </script>
-
+@include('includes.footer')
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 

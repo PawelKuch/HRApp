@@ -21,23 +21,26 @@
     margin: 1px;
 }
 
-.user {
-    cursor: pointer;
+.user-tile {
+    border: 1px solid #2d3748;
     border-radius: 15px;
-    border: 1px solid black;
-    background-color: lightslategray;
-    width: 300px;
-    text-align: center;
+    padding: 10px;
     margin: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #2d3748;
+    color: #edf2f7;
 }
 
-.user:hover {
-    background-color: #2d3748;
-    color: white;
+.user-tile:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    background-color: #4a5568;
 }
 
 .active_tile {
-    background-color: #007bff;
+    background-color: #2d3748;
+    color: white;
 }
 
 .pending_leaves {
@@ -56,7 +59,7 @@
 }
 
 .category_tile:hover {
-    background-color: #2d3748;
+    background-color: #395a6a;
     color: white;
     cursor: pointer;
 }
@@ -72,4 +75,8 @@
 
 .hidden {
     display: none;
+}
+
+.btn-dark {
+    background-color: #2d3748;
 }

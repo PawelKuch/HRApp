@@ -10,5 +10,4 @@ $('#to_date_picker').datepicker({
     format: 'dd-mm-yyyy',
     autoclose: true,
     todayHighlight: true
-
 })

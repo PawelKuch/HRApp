@@ -25,7 +25,7 @@ class ExpenseService
         $expense -> expense_id = str::uuid() -> toString();
         $expense -> user() -> associate($user);
         $expense -> invoice_no = $invoiceNo;
-        $expense -> date = $expenseDate;
+        $expense -> date = $expenseDate -> format('d-m-Y');
         $expense -> value = $expenseValue;
         $expense -> category =   $expenseCategory;
         $expense -> description = $expenseDescription;

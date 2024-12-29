@@ -1,6 +1,6 @@
 body {
     font-family: sans-serif;
-    font-size: 16px;
+
 }
 
 .container{
@@ -14,10 +14,70 @@ body {
     justify-content: center;
 }
 
-#modal-title-div {
-    width: 100%;
+.modal-dialog {
+    max-width: 80%;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.modal-content {
+    border-radius: 10px;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.user-tile {
+    border: 1px solid #2d3748;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 10px;
     display: flex;
     justify-content: center;
+    background-color: #2d3748;
+    color: #edf2f7;
+}
+
+.user-tile:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    background-color: #4a5568;
+}
+
+.table {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    text-align: center;
+}
+
+.table-bordered th, .table-bordered td {
+    border-color: #ddd;
+}
+
+.btn-dark {
+    background-color: #343a40;
+    border-color: #343a40;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.btn-dark:hover {
+    background-color: #495057;
 }
 
 #calculate-icon-span a {
@@ -32,29 +92,5 @@ body {
     color: black;
 }
 
-#users-container{
-    border: 1px solid green;
-    width: 75%;
-    min-height: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.user-tile {
-    border: 1px solid #2d3748;
-    border-radius: 15px;
-    padding: 10px;
-    width: 20%;
-    margin: 10px;
-    display: flex;
-    justify-content: center;
-    background-color: #2d3748;
-    color: #edf2f7;
-}
-
-
-.user-tile:hover {
-    background-color: #4a5568;
-}
 
 

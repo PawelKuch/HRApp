@@ -17,10 +17,10 @@
 <div id="approve_leave_request" data-approve-leave-url="{{route('approve.leave.request', ['leaveId' => ''])}}"></div>
 <div id="move_back_leave_request" data-move-back-leave-url="{{route('move.back.the.leave.request', ['leaveId' => ''])}}"></div>
 <div class="container">
-
+    <h4 class="my-4">Select the user whose leaves you want to see</h4>
     @foreach($users as $user)
         <div class="user-container">
-            <div class="user" data-user-id="{{$user -> id}}">{{$user -> name}}</div>
+            <div class="user-tile" data-user-id="{{$user -> id}}">{{$user -> name}} {{$user -> surname}}</div>
             <div class="leaves_category_container_{{$user -> id}} hidden">
                 <div class="category_tile pending_leaves_tile_{{$user -> id}}">pending leaves</div>
                 <div class="category_tile approved_incoming_leaves_tile_{{$user -> id}}">Approved incoming leaves</div>
@@ -50,8 +50,12 @@
     <a href="{{route('delete.all.leaves')}}"> <button class="btn btn-dark">Delete all Leaves</button></a>
 </div>
 
+
+
+@include('includes.footer')
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
 
 </body>
 </html>

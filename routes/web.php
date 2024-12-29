@@ -3,16 +3,13 @@
 use App\Http\Middleware\UserMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view("welcome");
-});
 
 Route::get('/controller', [\App\Http\Controllers\mainTestController::class, 'index']);
 
 Route::get('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'getCreateUserForm'])
     ->middleware(\App\Http\Middleware\AdminMiddleware::class);
 
-Route::get('/', [\App\Http\Controllers\mainTestController::class, 'getMainPage']);
+//Route::get('/', [\App\Http\Controllers\mainTestController::class, 'getMainPage']);
 
 Route::post('/create-user-form', [\App\Http\Controllers\mainTestController::class, 'createUser'])
     ->name('create-user')
@@ -24,9 +21,11 @@ Route::get('/delete-user/{id}', [\App\Http\Controllers\mainTestController::class
 
 Route::get('/main-page', [\App\Http\Controllers\mainTestController::class, 'getMainPage']) -> name('main-page');
 
-Route::get('sign-in', [\App\Http\Controllers\mainTestController::class, 'getSignInPage']);
+Route::get('/', [\App\Http\Controllers\mainTestController::class, 'getSignInPage']);
 
-Route::post('sign-in', [\App\Http\Controllers\mainTestController::class, 'signIn']) -> name('sign-in');
+Route::get('/sign-in', [\App\Http\Controllers\mainTestController::class, 'getSignInPage']);
+
+Route::post('/sign-in', [\App\Http\Controllers\mainTestController::class, 'signIn']) -> name('sign-in');
 
 Route::get('/sign-out', [\App\Http\Controllers\mainTestController::class, 'signOut']) -> name('sign-out');
 
@@ -142,5 +141,8 @@ Route::get('cancel-leave-request', [\App\Http\Controllers\mainTestController::cl
 Route::post('edit.leave.request', [\App\Http\Controllers\mainTestController::class, 'editLeaveRequest'])
     -> name('edit.leave.request')
     -> middleware(UserMiddleware::class);
+
+Route::get('forgot-password', [\App\Http\Controllers\mainTestController::class, 'getForgotPasswordPage'])
+    -> name('forgot.password');
 
 

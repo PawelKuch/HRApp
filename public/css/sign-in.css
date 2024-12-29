@@ -1,12 +1,52 @@
 body {
-    background-color: #edf2f7;
+    background-color: white;
 }
 
 .alert{
     text-align: center;
 }
 
-#sign-in-button-div {
+#button-div {
     margin-bottom: 10px;
 }
 
+.container {
+    height: 100vh;
+    width: 100%;
+}
+
+.input-span{
+    width: 150px;
+}
+
+#news-container {
+    width: 50%;
+}
+
+#sign-in-container {
+    width: 50%;
+}
+
+p {
+    width: 80%;
+    text-align: justify;
+}
+
+#main-news {
+    display: flex;
+    flex-direction: column; /* Ustaw kierunek na kolumnę */
+    justify-content: center; /* Wyśrodkowanie w pionie */
+    align-items: center; /* Wyśrodkowanie w poziomie */
+    text-align: center; /* Dodatkowe wyśrodkowanie tekstu */
+    height: 100%; /* Dostosuj wysokość kontenera */
+}
+
+#form-div {
+    display: flex;
+    justify-content: center;
+}
+
+.input-group {
+    display: flex;
+    justify-content: center;
+}

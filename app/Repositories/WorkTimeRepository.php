@@ -32,10 +32,8 @@ class WorkTimeRepository {
 
     public function deleteAllWorkTimes() : bool
     {
-        if(DB::table('work_times')->delete()){
-            return true;
-        }
-        return false;
+        WorkTime::truncate();
+        return true;
     }
 
     public function getMonthlyWorkTimesForUser(User $user, int $month, int $year) : Collection

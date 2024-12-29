@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 
@@ -157,6 +158,11 @@ class mainTestController extends Controller
         $currentMonth = Carbon::create($year, $month, 1);
 
         $days = $this -> workTimeService -> getDaysArray($currentMonth);
+        $uuids = [];
+        foreach ( $days as $day ) {
+            $randomUUID = str::uuid() -> toString();
+            $uuids[] = $randomUUID;
+        }
 
         $hours = $this -> workTimeService -> get24HoursArray();
         $minutes = $this -> workTimeService -> getMinutesArray();
@@ -176,7 +182,7 @@ class mainTestController extends Controller
 
         $previousMonths = $this -> workTimeService -> getMonthsRange($currentMonth);
 
-        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>  $workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname]);
+        return view('worktime', ['userId' => $userId]) -> with(['currentMonth' => $currentMonth, 'days' => $days, 'hours' => $hours, 'minutes' => $minutes , 'workTimes' =>  $workTimes, 'action' => $action, 'totalHours' => $totalHours, 'previousMonths' => $previousMonths, 'userName' => $userName, 'userSurname' => $userSurname, 'uuids' => $uuids]);
     }
 
     public function calculateWorkTime(Request $request, $userId) : RedirectResponse
@@ -227,7 +233,6 @@ class mainTestController extends Controller
             Log::warning("user not found");
             $userId = 0;
         }
-        //$date = (Carbon::now() -> year, Carbon::now() -> month, Carbon::now() -> month, Carbon::now() -> day);
         $date = Carbon::now();
         $this -> expenseService -> createExpense($user, $data['invoiceNo'], $data['value'], $date, $data['category'], $data['description']);
         return redirect() -> route('expenses', ['userId' => $userId]);
@@ -454,6 +459,10 @@ class mainTestController extends Controller
 
         $this -> leaveService -> editLeaveRequest($leaveId, $fromDate, $toDate);
         return redirect() -> route('user.leaves');
+    }
+
+    public function getForgotPasswordPage() : View{
+        return view('forgot-password');
     }
 }
 

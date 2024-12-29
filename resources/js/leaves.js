@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.user').forEach(user => {
+    document.querySelectorAll('.user-tile').forEach(user => {
         let id = user.dataset.userId;
         let pendingLeavesTile = document.querySelector(`.pending_leaves_tile_${id}`);
         let approvedIncomingLeavesTile = document.querySelector(`.approved_incoming_leaves_tile_${id}`);

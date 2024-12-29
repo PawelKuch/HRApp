@@ -7,6 +7,12 @@
 
 }
 
+#navi-style {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+}
+
 #imgLogo {
     margin-left: 15px;
 }
@@ -132,4 +138,13 @@ a:link {
 
 .dropdown-content-user a:hover {
     background-color: #9ca3af;
+}
+
+footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background-color: #2d3748;
+    color: #ffffff;
+    text-align: center;
 }

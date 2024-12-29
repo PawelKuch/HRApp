@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\WorkTime;
 use App\Repositories\WorkTimeRepository;
 use Carbon\Carbon;
-use Carbon\Month;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -50,22 +49,9 @@ class WorkTimeService {
     {
         $hoursAmount = $startDateInput -> diffInHours($endDateInput);
         $minutesAmount = $startDateInput -> diffInMinutes($endDateInput) % 60;
-
-        return Carbon::createFromTime($hoursAmount, $minutesAmount) -> format('H:i');
+        return sprintf('%02d:%02d', $hoursAmount, $minutesAmount);
     }
 
-    public function getStartDate($startHourInput, $startMinuteInput) : Carbon
-    {
-        $startHour = (int) explode(':', $startHourInput)[0];
-        $startMinute = (int) explode(':', $startMinuteInput)[1];
-        return Carbon::createFromTime($startHour, $startMinute);
-    }
-
-    public function getEndDate($endHourInput, $endMinuteInput) : Carbon{
-        $endHour = (int) explode(':',$endHourInput)[0];
-        $endMinute = (int) explode(':', $endMinuteInput)[1];
-        return Carbon::createFromTime($endHour, $endMinute);
-    }
 
     public function getAllWorkTimes() : Collection
     {

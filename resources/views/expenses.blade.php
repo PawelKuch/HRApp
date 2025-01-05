@@ -22,7 +22,7 @@
                     <th>Invoice no</th>
                     <th>Category</th>
                     <th>Description</th>
-                    <th>Value</th>
+                    <th>Value (PLN)</th>
                     <th>Date</th>
                     <th>Status</th>
                 </tr>
@@ -35,7 +35,10 @@
                         <td>{{$expense -> description}}</td>
                         <td>{{$expense -> value}}</td>
                         <td>{{$expense -> date}}</td>
-                        <td>{{$expense -> is_settled}}</td>
+                        <td>
+                            <div class="badge {{$expense -> is_settled == 1 ? 'bg-success' : 'bg-warning'}}">
+                                {{$expense -> is_settled == 1 ? 'settled' : 'unsettled'}}
+                            </div></td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -84,6 +87,7 @@
                                         <th>Invoice No</th>
                                         <th>Category</th>
                                         <th>Description</th>
+                                        <th>Value (PLN)</th>
                                         <th>Date</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -96,8 +100,14 @@
                                                 <td>{{$expense -> invoice_no}}</td>
                                                 <td>{{$expense -> category}}</td>
                                                 <td>{{$expense -> description}}</td>
+                                                <td>{{$expense -> value}}</td>
                                                 <td>{{$expense -> date}}</td>
-                                                <td>{{$expense -> is_settled}}</td>
+                                                <td>
+                                                    <span class="badge {{ $expense -> is_settled == 1 ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $expense ->is_settled == 1 ? 'settled' : 'unsettled' }}
+                                                    </span>
+
+
                                                 <td>
                                                     @if($expense -> is_settled)
                                                         <span id="unsettle-icon-span">
@@ -110,7 +120,7 @@
                                                             <a href="{{route('settleTheExpense', ['expenseId' => $expense -> expense_id])}}">
                                                                 <i class="bi bi-calculator"></i>
                                                             </a>
-                                                                </span>
+                                                        </span>
                                                     @endif
                                                         <span id="delete-icon-span">
                                                             <a href="{{route('deleteExpense', ['userId' => $user -> userId, 'expenseId' => $expense -> expense_id])}}">

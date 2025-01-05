@@ -23,7 +23,7 @@
         <thead>
         <tr><th colspan="5" style="text-align: center;">Your leaves history</th></tr>
         <tr>
-            <th>Request date</th>
+            <th>Request date11</th>
             <th>From</th>
             <th>To</th>
             <th>Status</th>
@@ -32,10 +32,15 @@
         <tbody>
         @foreach($leavesHistory as $leave)
             <tr>
-                <td>{{$leave -> created_at -> format("d-M-y")}}</td>
-                <td>{{$leave -> from_date}}</td>
-                <td>{{$leave -> to_date}}</td>
-                <td>{{$leave -> leave_status}}</td>
+                <td>{{$leave -> created_at -> format('d-m-y')}}</td>
+                <td>{{$leave -> from_date -> format('d-m-y')}}</td>
+                <td>{{$leave -> to_date -> format('d-m-y')}}</td>
+                <td>
+                    @if($leave -> leave_status === 'approved')
+                        <div class="badge bg-success">approved</div>
+                    @else
+                        <div class="badge bg-danger">denied</div>
+                    @endif</td>
             </tr>
         @endforeach
         </tbody>
@@ -61,9 +66,11 @@
                 <td>{{$leave -> created_at -> format("d-m-Y")}}</td>
                 <td>{{$leave -> from_date -> format("d-m-Y")}}</td>
                 <td>{{$leave -> to_date -> format("d-m-Y")}}</td>
-                <td>{{$leave -> leave_status}}</td>
-                <td><a href="{{route('cancel.leave.request', ['leaveId' => $leave -> leave_id])}}">Cancel</a> ||
-                    <a href="#" class="editBtn" data-bs-toggle="modal" data-bs-target="#editLeaveRequestModal_{{$leave -> leave_id}}" data-leaveId="{{$leave -> leave_id}}">Edit</a>
+                <td>
+                    <div class="badge bg-warning">{{$leave -> leave_status}}</div>
+                </td>
+                <td><a href="{{route('cancel.leave.request', ['leaveId' => $leave -> leave_id])}}" class="text-danger"> <i class="bi bi-trash"></i></a> ||
+                    <a href="#" class="editBtn" data-bs-toggle="modal" data-bs-target="#editLeaveRequestModal_{{$leave -> leave_id}}" data-leaveId="{{$leave -> leave_id}}"><i class="bi bi-pencil"></i></a>
                 </td>
             </tr>
             <div class="modal fade" id="editLeaveRequestModal_{{$leave -> leave_id}}" tabindex="-1" aria-labelledby="editLeaveRequestModal" aria-hidden="true">
@@ -120,7 +127,7 @@
                     <td>{{$leave -> created_at -> format('d-m-Y')}}</td>
                     <td>{{$leave -> from_date}}</td>
                     <td>{{$leave -> to_date -> format('d-m-Y')}}</td>
-                    <td>{{$leave -> leave_status}}</td>
+                    <td><div class="badge bg-succes">{{$leave -> leave_status}}</div></td>
                 </tr>
             @endforeach
         </tbody>

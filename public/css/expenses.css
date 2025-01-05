@@ -5,8 +5,8 @@ body {
 
 .container{
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    height: 100vh;
 }
 
 #form-div {
@@ -84,7 +84,7 @@ body {
     color:green;
 }
 
-#delete-icon-span a{
+#delete-icon-span a {
     color: red;
 }
 

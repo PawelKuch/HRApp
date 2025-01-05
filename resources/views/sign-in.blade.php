@@ -29,8 +29,12 @@
     </div>
 
     <div id="sign-in-container" class="d-flex justify-content-center flex-column">
-        <div id="sign-in-header" class="d-flex justify-content-center mb-5">
-            Log in below to get further
+        <div id="sign-in-header" class="d-flex flex-column justify-content-center mb-5">
+            <h1>Log in below to get further</h1>
+            <div id="login-data">
+                Address email: admin@admin.com <br>
+                Password: admin
+            </div>
         </div>
         <div id="form-div">
             <form id="sign-in-form" action="{{route('sign-in')}}" method="POST">

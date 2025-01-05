@@ -2,7 +2,15 @@ body {
     font-family: sans-serif;
 }
 
+.container {
+    height: 100vh;
+}
+
 #thead-users {
     background-color: #9ca3af;
     color: #007bff;
+}
+
+.btn-dark {
+    background-color: #2d3748;
 }

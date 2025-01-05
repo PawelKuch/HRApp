@@ -15,7 +15,7 @@
 </head>
 <body>
 @include('includes.menu-navigation')
-<div class="container">
+<div class="container" style="height: 100vh;">
 
         <div class="menu-tile">
             <a href="{{route('change.password', ['userId' => Auth::user() -> userId])}}">

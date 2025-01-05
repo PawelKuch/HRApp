@@ -32,7 +32,7 @@
                             <li><a href='{{route('expenses', ['userId' => Auth::user() -> userId])}}' class="text-white">Expenses</a></li>
                     @endif
                      <div class="dropdown">
-                         <a href="#" class="dropBtn">{{Auth::user() -> name}}</a>
+                         <a href="#" class="dropBtn" style="color: #8d8dff;">{{Auth::user() -> name}}</a>
                          <div class="dropdown-content-user">
                              <a href="#">Your profile</a>
                              <a href="{{route('your.account', ['userId' => Auth::user() -> userId])}}">Your account</a>

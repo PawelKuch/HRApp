@@ -218,7 +218,6 @@ class mainTestController extends Controller
         $expensesForUser = $this -> expenseService -> getExpensesForUser($userId);
         $users = $this -> userService -> getAllUsers();
         $expenses = $this -> expenseService -> getAllExpenses();
-        //dd($columns);
         return view('expenses', ['expensesForUser' => $expensesForUser,'expenses' => $expenses ,'users' => $users]);
     }
 

@@ -142,8 +142,6 @@ a:link {
 
 footer {
     width: 100%;
-    position: fixed;
-    bottom: 0;
     background-color: #2d3748;
     color: #ffffff;
     text-align: center;

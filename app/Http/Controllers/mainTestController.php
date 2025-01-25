@@ -60,7 +60,7 @@ class mainTestController extends Controller
                 return redirect()->intended(route('main-page'));
             }elseif ($user -> is_blocked && Auth::attempt($credentials)){
                 Auth::logout();
-                return back() -> withErrors(['userBlocked' => "An account connected to the given address email has been blocked. Please, contact the administrator if you consider it as a mistake."]);
+                return back() -> withErrors(['userBlocked' => "An account linked to the given address email has been blocked. Please, contact the administrator if you consider it as a mistake."]);
             }
             return back()->withErrors(['credentials' => 'The provided credentials do not match our records.']);
         }

@@ -16,16 +16,17 @@
 <body>
 @include('includes.menu-navigation')
 
-<div class="container d-flex align-items-center justify-content-center">
+<div class="container d-flex align-items-center  flex-column">
+    <div id="form-header"><h3>Type email you will receive a new password</h3></div>
     <div id="form-div" class="d-flex flex-column justify-content-center">
-        <div id="form-header">Type email on which you will receive a new password</div>
+
         <form>
             @csrf
             <div class="input-group d-flex flex-row">
-                <span class="input-span input-group-text form-control bg-dark text-white">email</span>
+                <span class="input-span input-group-text form-control bg-dark text-white" style="width: 50px;">address email</span>
                 <input class="form-control">
             </div>
-            <div id="button-div">
+            <div id="button-div" class="mt-3">
                 <button class="btn btn-dark" type="submit">Send new password</button>
             </div>
         </form>

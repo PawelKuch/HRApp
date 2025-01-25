@@ -34,9 +34,13 @@
                      <div class="dropdown">
                          <a href="#" class="dropBtn" style="color: #8d8dff;">{{Auth::user() -> name}}</a>
                          <div class="dropdown-content-user">
-                             <a href="#">Your profile</a>
-                             <a href="{{route('your.account', ['userId' => Auth::user() -> userId])}}">Your account</a>
-                             <a href='{{route('user.settings', ['userId' => Auth::user() -> userId])}}'>Your settings</a>
+                             <div class="dropdown dropdown-settings">
+                                 <a href='#'>Your settings</a>
+                                 <div class="dropdown-content-settings">
+                                     <a href="{{route('change.password', ['userId' => Auth::user() -> userId])}}">password</a>
+                                     <a href="{{route('change.email')}}">email</a>
+                                 </div>
+                             </div>
                              <a href="{{route('sign-out')}}">Sign out</a>
                          </div>
                      </div>

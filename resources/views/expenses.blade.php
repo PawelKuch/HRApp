@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{asset('css/menu.css')}}">
     <link rel="stylesheet" href="{{asset('css/expenses.css')}}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <style>
 
@@ -123,7 +124,7 @@
                                                         </span>
                                                     @endif
                                                         <span id="delete-icon-span">
-                                                            <a href="{{route('deleteExpense', ['userId' => $user -> userId, 'expenseId' => $expense -> expense_id])}}">
+                                                            <a href="#" id="delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal-{{$user -> userId}}">
                                                                 <i class="bi bi-trash text-dark"></i>
                                                             </a>
                                                         </span>
@@ -140,6 +141,27 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="deleteModal-{{$user -> userId}}" tabindex="-1" aria-labelledby="deleteModal-{{$user -> userId}}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this expense?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <a href="{{route('deleteExpense', ['userId' => $user -> userId, 'expenseId' => $expense -> expense_id])}}"><button type="button" class="btn btn-primary">Confirm</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
             @endforeach
         </div>
     @endif
